@@ -1,4 +1,4 @@
-SDSL_INSTALL_PREFIX=/home/joyce.souza
+SDSL_INSTALL_PREFIX=${HOME}/software
 
 CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2
 LIBS=-lsdsl -ldivsufsort -ldivsufsort64

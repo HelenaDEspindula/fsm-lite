@@ -75,11 +75,17 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
     j = 0;
     for (uint64_t i = 0; i < ir->size(); ++i)
         j += wt.rank(n, i);
-    if (j != n) // Assert
+    
+    /* HELENA MODIFICACOES 4 */
+    
+    if (j != n)
     {
-        cerr << "Label sum failed, j = " << j << ", n = " << n << endl;
-        exit(1);
+      cerr << "Label sum failed, j = " << j << ", n = " << n << endl;
+      if (config.verbose)
+        cerr << "[VERBOSE] Erro no wt_init: número total de labels não bate com o tamanho do texto processado. Possível corrompimento ou falta de memória." << endl;
+      exit(1);
     }
+    
     
 }
     
@@ -102,10 +108,15 @@ int main(int argc, char ** argv)
         cerr << "Constructing the data structures..." << endl;
     cst_t cst;    
     construct(cst, config.tmpfile + ".tmp", 1);
+    
+    /* HELENA MODIFICACOES 3 */
+    
     if (!cst.csa.size())
     {
-        cerr << "error: unable to construct the data structure; out of memory?" << endl; 
-        abort();
+      cerr << "error: unable to construct the data structure; out of memory?" << endl;
+      if (config.verbose)
+        cerr << "[VERBOSE] Falha na construção de cst. Tamanho total dos dados pode ter excedido a capacidade de RAM." << endl;
+      abort();
     }
     
     wt_t label_wt;
@@ -134,15 +145,21 @@ int main(int argc, char ** argv)
         buffer.push_back(child);
     while (!buffer.empty())
     {
+        
+        /* HELENA MODIFICACOES 5 */
+              static size_t node_counter = 0;
+        node_counter++;
+        if (config.verbose && node_counter % 100000 == 0){
+          cerr << "[VERBOSE] Processados " << node_counter << " nós da árvore de sufixos..." << endl;
+        }
+        
         node_type const node = buffer.back();
         buffer.pop_back();        
         unsigned depth = cst.depth(node);
         
-        /* HELENA MODIFICACOES 1
-        
-        if (depth > 1000)
+        /* HELENA MODIFICACOES 1 */
+                if (depth > 1000)
           continue;
-        */
         
         if (depth < config.maxlength)
             for (auto& child: cst.children(node))
@@ -206,7 +223,7 @@ int main(int argc, char ** argv)
                 cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
         
-        /* HELENA MODIFICACOES 2
+        /* HELENA MODIFICACOES 2 */
 
         labels.clear();
         rank_sp.clear();
@@ -214,10 +231,14 @@ int main(int argc, char ** argv)
         labels.shrink_to_fit();
         rank_sp.shrink_to_fit();
         rank_ep.shrink_to_fit();
-        */
-        
-        
-        
+    }
+    
+    /* HELENA MODIFICACOES 6 */
+    if (config.verbose)
+    {
+      cerr << "[VERBOSE] Finalizando execução. Memória total alocada estimada pelo SDSL: "
+           << size_in_mega_bytes(cst) + size_in_mega_bytes(label_wt)
+           << " MiB (sem contar buffers e vetores auxiliares)." << endl;
     }
     
     if (config.verbose)
