@@ -1,18 +1,63 @@
 #!/bin/bash
 
-INPUT_LIST=$1
-TMP_PREFIX=$2
-MINLEN=6
-MAXLEN=610
+INPUT_FILE=/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/GWAS_OXA-23_OXA-24/fsm_lite/input_fsm-lite_OXA-23_OXA-24_100.txt
+TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
+LOG_DIR="logs/fsm-lite"
+TMP_DIR="tmp/fsm-lite"
+MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.txt"
+OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
+TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
+OUTPUT_RES="fsm_results_${TIMESTAMP}.txt"
+SESSION_RUN="fsm_run"
+SESSION_MONITOR="fsm_monitor"
+INTERVAL_MONITOR=30
 
-DATE=$(date +"%Y-%m-%d_%H-%M-%S")
-LOGDIR="logs"
-mkdir -p "$LOGDIR"
-LOGFILE="$LOGDIR/fsm_output_log_${DATE}.txt"
+# Criar pasta de logs, se não existir
+mkdir -p "$LOG_DIR"
+mkdir -p "$TMP_DIR"
 
-ulimit -v 838860800
+# Criar log inicial de monitoramento
+echo "Iniciando monitoramento do fsm-lite em $TIMESTAMP..." > "$MONITOR_LOG"
+echo "Iniciando execução do fsm-lite em $TIMESTAMP..." > "$OUTPUT_LOG"
+echo "Salvando saída em: $OUTPUT_RES"
 
-TMUX_SESSION="fsm_run_$DATE"
-tmux new-session -d -s $TMUX_SESSION "./fsm-lite -l $INPUT_LIST -t $TMP_PREFIX -s $MINLEN -S $MAXLEN -v > $LOGFILE 2>&1"
-tmux split-window -h -t $TMUX_SESSION "watch -n 1 'ps -o pid,vsz,comm -C fsm-lite'"
-tmux attach -t $TMUX_SESSION
+# Criar sessão tmux para executar fsm-lite com stdout + stderr no mesmo log
+tmux new-session -d -s "$SESSION_RUN" "bash -c '
+  echo Iniciando fsm-lite...
+  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\" ; } \
+    > \"${OUTPUT_RES}\" \
+    2> \"${OUTPUT_LOG}\"
+'"
+
+# Aguardar e capturar o PID do processo
+sleep 2
+FSM_PID=$(pgrep -f "./fsm-lite -l ${INPUT_FILE}")
+
+if [ -z "$FSM_PID" ]; then
+  echo "Erro: não foi possível identificar o PID de fsm-lite."
+  exit 1
+fi
+
+# Comando do monitoramento
+MONITOR_CMD=$(cat << 'EOF'
+while kill -0 $FSM_PID 2>/dev/null; do
+  echo "------ $(date) ------" >> "$MONITOR_LOG"
+  ps -p $FSM_PID -o pid,ppid,%cpu,%mem,vsz,rss,etime,cmd >> "$MONITOR_LOG"
+  echo "" >> "$MONITOR_LOG"
+  sleep $INTERVAL_MONITOR
+done
+echo "Processo fsm-lite finalizado em $(date)." >> "$MONITOR_LOG"
+read -p 'Pressione Enter para encerrar o monitoramento...'
+EOF
+)
+
+# Criar sessão de monitoramento
+tmux new-session -d -s "$SESSION_MONITOR" "FSM_PID=$FSM_PID MONITOR_LOG=$MONITOR_LOG INTERVAL_MONITOR=$INTERVAL_MONITOR bash -c '$MONITOR_CMD'"
+
+# Mensagem final
+echo "Sessões tmux criadas:"
+echo "- Execução:     tmux attach -t $SESSION_RUN"
+echo "- Monitoramento: tmux attach -t $SESSION_MONITOR"
+echo "Logs salvos em:"
+echo "  - Monitoramento: $MONITOR_LOG"
+echo "  - Saída + Erros do programa: $OUTPUT_LOG"
