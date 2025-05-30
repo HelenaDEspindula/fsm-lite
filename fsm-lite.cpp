@@ -182,10 +182,19 @@ int main(int argc, char ** argv)
         
         node_type const node = buffer.back();
         buffer.pop_back();        
-        unsigned depth = cst.depth(node);
+        //unsigned depth = cst.depth(node);
         
         /* --- HELENA MODIFICACOES 1 --- */
-        if (depth > 1000)
+        unsigned depth = cst.depth(node);
+        
+        /* Log da maior profundidade observada */
+        static size_t max_depth_seen = 0;
+        if (depth > max_depth_seen) {
+          max_depth_seen = depth;
+          cerr << "[VERBOSE] Nova profundidade máxima observada: " << depth << endl;
+        }
+        
+        if (depth > 10000)
           continue;
         /* --- */
         
@@ -218,7 +227,16 @@ int main(int argc, char ** argv)
         //node_type wn = cst.wl(node, cst.csa.bwt[sp]);
         
         /* --- HELENA MODIFICACOES 1 --- */
-        node_type wn = cst.wl(node, cst.csa.bwt[sp]);
+        char_type next_char = cst.csa.bwt[sp];
+        
+        // Protege contra caractere inválido (e.g. '\0' ou outros não esperados)
+        if (next_char == '\0' || next_char > 127) {
+          cerr << "[ERRO] Caractere inválido para Weiner-link: bwt[sp] = " << (int)next_char << endl;
+          continue;
+        }
+        
+        node_type wn = cst.wl(node, next_char);
+        
         
         // Se quiser validar que o link é válido:
         if (wn == cst.root()) {
