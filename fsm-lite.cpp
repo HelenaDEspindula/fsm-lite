@@ -218,10 +218,10 @@ int main(int argc, char ** argv)
         //node_type wn = cst.wl(node, cst.csa.bwt[sp]);
         
         /* --- HELENA MODIFICACOES 1 --- */
-        node_type wn;
-        bool has_wl = cst.wl(node, cst.csa.bwt[sp], wn);
+        node_type wn = cst.wl(node, cst.csa.bwt[sp]);
         
-        if (!has_wl) {
+        // Se quiser validar que o link é válido:
+        if (wn == cst.root()) {
           if (config.verbose)
             cerr << "[VERBOSE] Nenhum Weiner-link disponível para o nó com sp = "
                  << sp << ", bwt[sp] = " << cst.csa.bwt[sp] << endl;
