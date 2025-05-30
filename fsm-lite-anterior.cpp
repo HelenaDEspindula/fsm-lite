@@ -32,16 +32,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
     if (config.debug)
         cerr << "bwt end marker pos = " << j << endl;
     uint64_t bwtendpos = j;
-    
-    /* --- Modificacao Helena --- */
-    if (j >= cst.csa.lf.size()) {
-      cerr << "[ERRO] Índice 'j' fora dos limites de lf[]." << endl;
-      exit(1);
-    }
-    /* --- */
-    
     j = cst.csa.lf[j];
-    
     labels[j] = 0;  // Label of last byte
     separator[n-1] = 0;
     separator[n-2] = 1;
@@ -116,7 +107,7 @@ int main(int argc, char ** argv)
     if (config.verbose)
         cerr << "Constructing the data structures..." << endl;
     cst_t cst;    
-    construct(cst, config.tmpfile + ".tmp", 1);
+    construct(cst, config.tmpfile + ".tmp", 1)
     
     /* --- HELENA MODIFICACOES 3 --- */
     if (config.verbose)
@@ -182,19 +173,10 @@ int main(int argc, char ** argv)
         
         node_type const node = buffer.back();
         buffer.pop_back();        
-        //unsigned depth = cst.depth(node);
-        
-        /* --- HELENA MODIFICACOES 1 --- */
         unsigned depth = cst.depth(node);
         
-        /* Log da maior profundidade observada */
-        static size_t max_depth_seen = 0;
-        if (depth > max_depth_seen) {
-          max_depth_seen = depth;
-          cerr << "[VERBOSE] Nova profundidade máxima observada: " << depth << endl;
-        }
-        
-        if (depth > 10000)
+        /* --- HELENA MODIFICACOES 1 --- */
+        if (depth > 1000)
           continue;
         /* --- */
         
@@ -224,28 +206,8 @@ int main(int argc, char ** argv)
         /* --- */
           
         
-        //node_type wn = cst.wl(node, cst.csa.bwt[sp]);
+        node_type wn = cst.wl(node, cst.csa.bwt[sp]);
         
-        /* --- HELENA MODIFICACOES 1 --- */
-        char_type next_char = cst.csa.bwt[sp];
-        
-        // Protege contra caractere inválido (e.g. '\0' ou outros não esperados)
-        if (next_char == '\0' || next_char > 127) {
-          cerr << "[ERRO] Caractere inválido para Weiner-link: bwt[sp] = " << (int)next_char << endl;
-          continue;
-        }
-        
-        node_type wn = cst.wl(node, next_char);
-        
-        
-        // Se quiser validar que o link é válido:
-        if (wn == cst.root()) {
-          if (config.verbose)
-            cerr << "[VERBOSE] Nenhum Weiner-link disponível para o nó com sp = "
-                 << sp << ", bwt[sp] = " << cst.csa.bwt[sp] << endl;
-            continue;
-        }
-        /* --- */
         
         
         
@@ -279,19 +241,7 @@ int main(int argc, char ** argv)
         
         if (depth > config.maxlength)
             depth = config.maxlength;
-        
-        //size_type pos = cst.csa[sp];
-        
-        
-        
-        /* --- modifcacoes helena --- */
-        if (sp >= cst.csa.size()) {
-          cerr << "[ERRO] Valor de sp fora do limite do vetor CSA: sp = "
-               << sp << ", limite = " << cst.csa.size() << endl;
-          exit(1);
-        }
         size_type pos = cst.csa[sp];
-        /* --- */
         
         // Check for separator symbol TODO cleanup
         /*unsigned p_depth = cst.depth(cst.parent(node));
@@ -303,18 +253,7 @@ int main(int argc, char ** argv)
         
         if (sep_rank1(pos) != sep_rank1(pos + depth))
             continue;
-        //auto s = extract(cst.csa, pos, pos + depth - 1);
-        
-        /* --- modificacoes helena --- */
-        if (pos + depth - 1 >= cst.csa.size()) {
-          cerr << "[ERRO] Tentativa de extrair sequência além dos limites do CSA: "
-               << "pos = " << pos << ", depth = " << depth 
-               << ", limite = " << cst.csa.size() << endl;
-          continue;  // ou exit(1);
-        }
         auto s = extract(cst.csa, pos, pos + depth - 1);
-        /* --- */
-        
         if (input_reader::smaller_than_rev_cmpl(s))
             continue;
         cout << s + " |";
