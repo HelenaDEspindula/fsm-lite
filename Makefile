@@ -5,12 +5,10 @@
 # SDSL installation path for fsm-lite
 SDSL_INSTALL_PREFIX=/home/joyce.souza
 
-# Include and compiler flags
-CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2
-LIBS=-lsdsl -ldivsufsort -ldivsufsort64
-
-# Compiler
+# Compiler and flags
 CXX=g++
+CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2 -I./gzstream
+LIBS=-lsdsl -ldivsufsort -ldivsufsort64
 
 # ====================
 # fsm-lite Build Rules
@@ -31,27 +29,28 @@ test: fsm-lite
 # combineKmers Build Rules
 # =========================
 
-# Installation prefix for gzstream/boost headers and libraries
+# Installation prefix for boost (if needed)
 PREFIX=${HOME}/software
 
-# Include paths (add gzstream support)
-COMBINE_CPPFLAGS=-I$(PREFIX)/include -I../gzstream
-
 # Linker options for dynamic and static builds
-COMBINE_LDLIBS=-L../gzstream -L$(PREFIX)/lib -lgzstream -lz -lboost_program_options
-COMMON_LDLIBS=-L../gzstream -L$(PREFIX)/lib -static -static-libstdc++ -static-libgcc
-COMBINE_STATIC_LDLIBS=$(COMMON_LDLIBS) -lgzstream -lz -lboost_program_options
+COMBINE_LDLIBS=-lz -lboost_program_options
+COMMON_LDLIBS=-static -static-libstdc++ -static-libgcc
+COMBINE_STATIC_LDLIBS=$(COMMON_LDLIBS) -lz -lboost_program_options
 
 # Object files for combineKmers
-COMBINE_OBJECTS=combineInit.o combineCmdLine.o combineKmers.o
+COMBINE_OBJECTS=combineInit.o combineCmdLine.o combineKmers.o gzstream/gzstream.o
 
 # Build target for dynamic combineKmers
 combineKmers: $(COMBINE_OBJECTS)
-	$(CXX) $(CPPFLAGS) $(COMBINE_CPPFLAGS) $^ $(COMBINE_LDLIBS) -o $@
+	$(CXX) $(CPPFLAGS) $^ $(COMBINE_LDLIBS) -o $@
 
 # Build target for static combineKmers
 combineKmers_static: $(COMBINE_OBJECTS)
-	$(CXX) $(CPPFLAGS) $(COMBINE_CPPFLAGS) $^ $(COMBINE_STATIC_LDLIBS) -o combineKmers
+	$(CXX) $(CPPFLAGS) $^ $(COMBINE_STATIC_LDLIBS) -o combineKmers
+
+# Rule to build gzstream object
+gzstream/gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
+	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 # =========
 # Utilities
@@ -59,7 +58,7 @@ combineKmers_static: $(COMBINE_OBJECTS)
 
 # Clean up object and binary files
 clean:
-	$(RM) fsm-lite combineKmers *.o *~
+	$(RM) fsm-lite combineKmers *.o gzstream/*.o *~
 
 # Automatically generate header dependencies
 depend:
