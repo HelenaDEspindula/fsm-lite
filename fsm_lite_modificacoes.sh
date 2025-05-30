@@ -3,8 +3,10 @@
 INPUT_FILE=/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/GWAS_OXA-23_OXA-24/fsm_lite/input_fsm-lite_OXA-23_OXA-24_100.txt
 TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
 LOG_DIR="logs"
+TMP_DIR="tmp"
 MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.txt"
 OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
+TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
 OUTPUT_RES="fsm_results_${TIMESTAMP}.txt"
 SESSION_RUN="fsm_run"
 SESSION_MONITOR="fsm_monitor"
@@ -12,6 +14,7 @@ INTERVAL_MONITOR=30
 
 # Criar pasta de logs, se não existir
 mkdir -p "$LOG_DIR"
+mkdir -p "$TMP_DIR"
 
 # Criar log inicial de monitoramento
 echo "Iniciando monitoramento do fsm-lite em $TIMESTAMP..." > "$MONITOR_LOG"
@@ -21,7 +24,7 @@ echo "Salvando saída em: $OUTPUT_RES"
 # Criar sessão tmux para executar fsm-lite com stdout + stderr no mesmo log
 tmux new-session -d -s "$SESSION_RUN" "bash -c '
   echo Iniciando fsm-lite...
-  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t fsm_kmers_100_m3; } \
+  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\ ; } \
     > \"${OUTPUT_RES}\" \
     2> \"${OUTPUT_LOG}\"
 '"
