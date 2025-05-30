@@ -1,33 +1,95 @@
-Frequency-based String Mining (lite)
-===
+📘 README - fsm-lite (versão modificada)
 
-A singe-core implemetation of frequency-based substring mining. This
-implementation requires the https://github.com/simongog/sdsl-lite
-library (tested using the release `sdsl-lite-2.0.3`).
+### 🔍 Objetivo
+`fsm-lite` é uma ferramenta para identificação eficiente de *kmers* compartilhados em múltiplos arquivos FASTA, utilizando árvore de sufixos compacta e wavelet tree, baseada na biblioteca [SDSL](https://github.com/simongog/sdsl-lite).
 
-1. Download and extract https://github.com/simongog/sdsl-lite/archive/v2.0.3.tar.gz
-2. install SDSL by running `./install.sh /install/path/sdsl-lite-2.0.3`, where `/install/path` need to be specified,
-3. update the correct SDSL installation path into the `fsm-lite/Makefile`,
-4. turn on preferred compiler optimization in `fsm-lite/Makefile`, and
-5. run `make depend && make` under the directory `fsm-lite`.
-
-For command-line options, see `./fsm-lite --help`.
-
-Usage example
 ---
 
-Input files are given as a list of `<data-identifier>` `<data-filename>` pairs. The `<data-identifier>`'s are assumed to be unique. Here's an example how to construct such a list out of all `/input/dir/*.fasta` files:
+### 🚀 Compilação
 
-  `for f in /input/dir/*.fasta; do id=$(basename "$f" .fasta); echo $id $f; done > input.list` 
+Requisitos:
+- GCC >= 5.0
+- Biblioteca SDSL instalada (com headers e libs)
 
-The files can then be processed by 
+```bash
+make
+```
 
-  `./fsm-lite -l input.list -t tmp | gzip - > output.txt.gz`
+Para compilar com informações de debug:
+```bash
+make DEBUG=1
+```
 
-where `tmp` is a prefix filename for storing temporary index files.
-
-TODO
 ---
-1. Optimize the time and space usage.
-2. Multi-threading.
-3. Support for gzip compressed input.
+
+### 🔧 Uso Básico
+```bash
+./fsm-lite -l lista.txt -t saida/tmp [opções]
+```
+
+| Parâmetro | Descrição |
+|----------|-----------|
+| `-l`     | Arquivo texto com pares `<ID> <caminho_fasta>` |
+| `-t`     | Prefixo para arquivos temporários |
+
+#### ⚙️ Opções adicionais
+| Parâmetro | Descrição | Valor padrão |
+|-----------|-----------|---------------|
+| `-m`      | Tamanho mínimo do kmer | 9 |
+| `-M`      | Tamanho máximo do kmer | 100 |
+| `-f`      | Frequência mínima por arquivo | 1 |
+| `-s`      | Suporte mínimo (nº de arquivos) | 2 |
+| `-S`      | Suporte máximo | `inf` |
+| `-v`      | Ativa saída detalhada | - |
+| `-D`      | Modo debug (ainda parcial) | - |
+
+---
+
+### ⚠️ Erros comuns
+
+- **Segmentation fault logo após construir estruturas**:
+  - Verifique se a RAM foi suficiente para `wt_init`
+  - Verifique se `2^DBITS` é maior que o número de arquivos no `-l`
+  - Tente executar com `-v` e redirecione o `stderr` para log:
+    ```bash
+    ./fsm-lite ... -v 2> fsm_debug.log
+    ```
+
+- **"[ERRO] Índice fora dos limites"**:
+  - Ocorre se `sp`, `bwt[sp]` ou `csa[sp]` está fora do vetor
+  - Pode ser problema de entrada corrompida ou limitação de memória
+
+---
+
+### 📂 Exemplo de lista (`lista.txt`)
+```
+OXA-23 sample1.fa
+OXA-24 sample2.fa
+```
+
+---
+
+### 🧪 Teste mínimo
+
+Inclua na pasta `test/` dois arquivos FASTA pequenos:
+
+```bash
+make test
+```
+
+---
+
+### 👷 Desenvolvedores e modificações
+
+Versão modificada por Helena R. S. D'Espíndula (2025)
+- Inclusão de mensagens `VERBOSE`
+- Validação de índices e memória
+- Otimizações de consumo (shrink_to_fit)
+- Validação de caracteres BWT
+
+Base original: [fsm-lite](https://github.com/nvalimak/fsm-lite)
+
+---
+
+### 📜 Licença
+MIT
