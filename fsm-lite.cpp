@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
     if (config.verbose)
         cerr << "Constructing the data structures..." << endl;
     cst_t cst;    
-    construct(cst, config.tmpfile + ".tmp", 1)
+    construct(cst, config.tmpfile + ".tmp", 1);
     
     /* --- HELENA MODIFICACOES 3 --- */
     if (config.verbose)
