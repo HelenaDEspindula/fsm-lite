@@ -72,3 +72,6 @@ depend:
 # ============
 
 .PHONY: all test clean depend combineKmers combineKmers_static
+
+# Default target: build both binaries
+all: fsm-lite combineKmers
