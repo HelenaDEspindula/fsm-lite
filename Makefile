@@ -1,21 +1,77 @@
-SDSL_PREFIX ?= $(HOME)/software
-CPPFLAGS += -std=c++11 -I$(SDSL_PREFIX)/include $(EXTRAFLAGS)
-LDFLAGS  += -L$(SDSL_PREFIX)/lib -lsdsl -ldivsufsort -ldivsufsort64
+# =========================
+# Configuration Parameters
+# =========================
+
+# SDSL installation path for fsm-lite
+SDSL_INSTALL_PREFIX=/home/joyce.souza
+
+# Compiler and flags
+CXX=g++
+CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2 -I./gzstream
+LIBS=-lsdsl -ldivsufsort -ldivsufsort64
+
+# ====================
+# fsm-lite Build Rules
+# ====================
+
+# Object files for fsm-lite
 OBJ = configuration.o input_reader.o fsm-lite.o
 
-ifdef DEBUG
-CPPFLAGS += -DDEBUG -g -O0
-else
-CPPFLAGS += -DNDEBUG -O3 -msse4.2
-endif
-
-all: fsm-lite
-
+# Build target for fsm-lite
 fsm-lite: $(OBJ)
-	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
+	$(LINK.cpp) $^ -L$(SDSL_INSTALL_PREFIX)/lib $(LIBS) -o $@
 
+# Test command for fsm-lite
 test: fsm-lite
-	./fsm-lite -l test/list.txt -t test/tmp -v
+	./fsm-lite -l test.list -t tmp -v --debug -m 1
 
+# =========================
+# combineKmers Build Rules
+# =========================
+
+# Installation prefix for boost (if needed)
+PREFIX=${HOME}/software
+
+# Linker options for dynamic and static builds
+COMBINE_LDLIBS=-lz -lboost_program_options
+COMMON_LDLIBS=-static -static-libstdc++ -static-libgcc
+COMBINE_STATIC_LDLIBS=$(COMMON_LDLIBS) -lz -lboost_program_options
+
+# Object files for combineKmers
+COMBINE_OBJECTS=combineInit.o combineCmdLine.o combineKmers.o gzstream.o
+
+# Build target for dynamic combineKmers
+combineKmers: $(COMBINE_OBJECTS)
+	$(CXX) $(CPPFLAGS) $^ $(COMBINE_LDLIBS) -o $@
+
+# Build target for static combineKmers
+combineKmers_static: $(COMBINE_OBJECTS)
+	$(CXX) $(CPPFLAGS) $^ $(COMBINE_STATIC_LDLIBS) -o combineKmers
+
+# Rule to build gzstream.o from gzstream.C
+gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
+	$(CXX) $(CPPFLAGS) -c $< -o $@
+
+# =========
+# Utilities
+# =========
+
+# Clean up object and binary files
 clean:
-	rm -f *.o fsm-lite *~ test/tmp.* test/tmp.meta
+	$(RM) fsm-lite combineKmers *.o *~ gzstream.o
+
+# Automatically generate header dependencies
+depend:
+	g++ -MM $(CPPFLAGS) *.cpp > dependencies.mk
+
+# Include dependencies if present
+-include dependencies.mk
+
+# ============
+# Phony Targets
+# ============
+
+.PHONY: all test clean depend combineKmers combineKmers_static
+
+# Default target: build both fsm-lite and combineKmers
+all: fsm-lite combineKmers
