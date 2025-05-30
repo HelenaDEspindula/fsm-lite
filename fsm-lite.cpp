@@ -32,7 +32,15 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
     if (config.debug)
         cerr << "bwt end marker pos = " << j << endl;
     uint64_t bwtendpos = j;
+    
+    /* --- Modificacao Helena --- */
+    if (j >= cst.csa.lf.size()) {
+      cerr << "[ERRO] Índice 'j' fora dos limites de lf[]." << endl;
+      exit(1);
+    }
+    /* --- */
     j = cst.csa.lf[j];
+    
     labels[j] = 0;  // Label of last byte
     separator[n-1] = 0;
     separator[n-2] = 1;
