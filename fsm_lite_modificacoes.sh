@@ -2,8 +2,8 @@
 
 INPUT_FILE=/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/GWAS_OXA-23_OXA-24/fsm_lite/input_fsm-lite_OXA-23_OXA-24_100.txt
 TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
-LOG_DIR="logs"
-TMP_DIR="tmp"
+LOG_DIR="logs/fsm-lite"
+TMP_DIR="tmp/fsm-lite"
 MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.txt"
 OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
 TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
