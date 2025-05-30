@@ -38,7 +38,7 @@ COMMON_LDLIBS=-static -static-libstdc++ -static-libgcc
 COMBINE_STATIC_LDLIBS=$(COMMON_LDLIBS) -lz -lboost_program_options
 
 # Object files for combineKmers
-COMBINE_OBJECTS=combineInit.o combineCmdLine.o combineKmers.o gzstream/gzstream.o
+COMBINE_OBJECTS=combineInit.o combineCmdLine.o combineKmers.o gzstream.o
 
 # Build target for dynamic combineKmers
 combineKmers: $(COMBINE_OBJECTS)
@@ -48,8 +48,8 @@ combineKmers: $(COMBINE_OBJECTS)
 combineKmers_static: $(COMBINE_OBJECTS)
 	$(CXX) $(CPPFLAGS) $^ $(COMBINE_STATIC_LDLIBS) -o combineKmers
 
-# Rule to build gzstream object
-gzstream/gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
+# Rule to build gzstream.o from gzstream.C
+gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 # =========
@@ -58,11 +58,11 @@ gzstream/gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
 
 # Clean up object and binary files
 clean:
-	$(RM) fsm-lite combineKmers *.o gzstream/*.o *~
+	$(RM) fsm-lite combineKmers *.o *~ gzstream.o
 
 # Automatically generate header dependencies
 depend:
-	g++ -MM -std=c++11 -I$(SDSL_INSTALL_PREFIX)/include *.cpp > dependencies.mk
+	g++ -MM $(CPPFLAGS) *.cpp > dependencies.mk
 
 # Include dependencies if present
 -include dependencies.mk
@@ -73,5 +73,5 @@ depend:
 
 .PHONY: all test clean depend combineKmers combineKmers_static
 
-# Default target: build both binaries
+# Default target: build both fsm-lite and combineKmers
 all: fsm-lite combineKmers
