@@ -107,9 +107,11 @@ int main(int argc, char ** argv)
     if (config.verbose)
         cerr << "Constructing the data structures..." << endl;
     cst_t cst;    
-    construct(cst, config.tmpfile + ".tmp", 1);
+    construct(cst, config.tmpfile + ".tmp", 1)
     
-    /* HELENA MODIFICACOES 3 */
+    /* --- HELENA MODIFICACOES 3 --- */
+    if (config.verbose)
+      cerr << "[VERBOSE] cst construído com sucesso. Tamanho: " << cst.size() << endl;
     
     if (!cst.csa.size())
     {
@@ -118,10 +120,16 @@ int main(int argc, char ** argv)
         cerr << "[VERBOSE] Falha na construção de cst. Tamanho total dos dados pode ter excedido a capacidade de RAM." << endl;
       abort();
     }
+    /* --- */
     
     wt_t label_wt;
     bitv_t separator;
     wt_init(label_wt, separator, cst, ir, config);
+    
+    /* --- Modificacao Helena --- */
+    if (config.verbose)
+      cerr << "[VERBOSE] Wavelet tree e vetor de separadores inicializados." << endl;
+    /* --- */
 
     bitv_t::rank_1_type sep_rank1(&separator);
     //bitv_t::select_1_type sep_select1(&separator); TODO Remove?
@@ -138,6 +146,12 @@ int main(int argc, char ** argv)
     /**
      * Main loop
      */
+    
+    /* --- Modificacao Helena --- */
+    if (config.verbose)
+      cerr << "[VERBOSE] Iniciando travessia da árvore de sufixos..." << endl;
+    /* --- */
+    
     node_type root = cst.root();
     vector<node_type> buffer;
     buffer.reserve(1024*1024);
@@ -146,20 +160,25 @@ int main(int argc, char ** argv)
     while (!buffer.empty())
     {
         
-        /* HELENA MODIFICACOES 5 */
-              static size_t node_counter = 0;
+        /* --- HELENA MODIFICACOES 5 --- */
+        if (config.verbose)
+          cerr << "[VERBOSE] Iteração: buffer com " << buffer.size() << " nós." << endl;
+        
+        static size_t node_counter = 0;
         node_counter++;
         if (config.verbose && node_counter % 100000 == 0){
           cerr << "[VERBOSE] Processados " << node_counter << " nós da árvore de sufixos..." << endl;
         }
+        /* --- */
         
         node_type const node = buffer.back();
         buffer.pop_back();        
         unsigned depth = cst.depth(node);
         
-        /* HELENA MODIFICACOES 1 */
-                if (depth > 1000)
+        /* --- HELENA MODIFICACOES 1 --- */
+        if (depth > 1000)
           continue;
+        /* --- */
         
         if (depth < config.maxlength)
             for (auto& child: cst.children(node))
@@ -172,7 +191,26 @@ int main(int argc, char ** argv)
         // Process the candidate node
         size_type sp = cst.lb(node);
         size_type ep = cst.rb(node);
+        
+        
+        /* --- HELENA MODIFICACOES 1 --- */
+        if (config.verbose)
+          cerr << "[VERBOSE] Acessando cst.csa.bwt[sp] com sp = " << sp
+               << ", bwt.size() = " << cst.csa.bwt.size() << endl;
+          
+        if (sp >= cst.csa.bwt.size()) {
+          cerr << "[ERRO] Valor de sp fora do limite do vetor BWT: sp = "
+               << sp << ", limite = " << cst.csa.bwt.size() << endl;
+          exit(1);
+        }
+        /* --- */
+          
+        
         node_type wn = cst.wl(node, cst.csa.bwt[sp]);
+        
+        
+        
+        
         /*if (config.debug)
         {
             size_type pos = cst.csa[sp];
@@ -204,6 +242,7 @@ int main(int argc, char ** argv)
         if (depth > config.maxlength)
             depth = config.maxlength;
         size_type pos = cst.csa[sp];
+        
         // Check for separator symbol TODO cleanup
         /*unsigned p_depth = cst.depth(cst.parent(node));
         if (sep_rank1(pos) != sep_rank1(pos + p_depth))
@@ -223,23 +262,24 @@ int main(int argc, char ** argv)
                 cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
         
-        /* HELENA MODIFICACOES 2 */
-
+        /* --- HELENA MODIFICACOES 2 --- */
         labels.clear();
         rank_sp.clear();
         rank_ep.clear();
         labels.shrink_to_fit();
         rank_sp.shrink_to_fit();
         rank_ep.shrink_to_fit();
+        /* --- */
     }
     
-    /* HELENA MODIFICACOES 6 */
+    /* --- HELENA MODIFICACOES 6 --- */
     if (config.verbose)
     {
       cerr << "[VERBOSE] Finalizando execução. Memória total alocada estimada pelo SDSL: "
            << size_in_mega_bytes(cst) + size_in_mega_bytes(label_wt)
            << " MiB (sem contar buffers e vetores auxiliares)." << endl;
     }
+    /* --- */
     
     if (config.verbose)
         cerr << "All done." << endl;    
