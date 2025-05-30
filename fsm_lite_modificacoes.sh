@@ -24,11 +24,10 @@ echo "Salvando saída em: $OUTPUT_RES"
 # Criar sessão tmux para executar fsm-lite com stdout + stderr no mesmo log
 tmux new-session -d -s "$SESSION_RUN" "bash -c '
   echo Iniciando fsm-lite...
-  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\ ; } \
+  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\" ; } \
     > \"${OUTPUT_RES}\" \
     2> \"${OUTPUT_LOG}\"
 '"
-
 
 # Aguardar e capturar o PID do processo
 sleep 2

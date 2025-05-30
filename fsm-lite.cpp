@@ -39,6 +39,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
       exit(1);
     }
     /* --- */
+    
     j = cst.csa.lf[j];
     
     labels[j] = 0;  // Label of last byte
