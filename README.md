@@ -62,7 +62,7 @@ where `tmp` is a prefix filename for storing temporary index files.
 | `-S`      | Maximum number of supporting files | `inf` |
 | `-v`      | Enable verbose output | - |
 | `-D`      | Enable debug mode | - |
-| `--help`  | Enable debug mode | - |
+| `--help`  | Help | - |
 
 ---
 
