@@ -261,7 +261,19 @@ int main(int argc, char ** argv)
         
         if (depth > config.maxlength)
             depth = config.maxlength;
+        
+        //size_type pos = cst.csa[sp];
+        
+        
+        
+        /* --- modifcacoes helena --- */
+        if (sp >= cst.csa.size()) {
+          cerr << "[ERRO] Valor de sp fora do limite do vetor CSA: sp = "
+               << sp << ", limite = " << cst.csa.size() << endl;
+          exit(1);
+        }
         size_type pos = cst.csa[sp];
+        /* --- */
         
         // Check for separator symbol TODO cleanup
         /*unsigned p_depth = cst.depth(cst.parent(node));
@@ -273,7 +285,18 @@ int main(int argc, char ** argv)
         
         if (sep_rank1(pos) != sep_rank1(pos + depth))
             continue;
+        //auto s = extract(cst.csa, pos, pos + depth - 1);
+        
+        /* --- modificacoes helena --- */
+        if (pos + depth - 1 >= cst.csa.size()) {
+          cerr << "[ERRO] Tentativa de extrair sequência além dos limites do CSA: "
+               << "pos = " << pos << ", depth = " << depth 
+               << ", limite = " << cst.csa.size() << endl;
+          continue;  // ou exit(1);
+        }
         auto s = extract(cst.csa, pos, pos + depth - 1);
+        /* --- */
+        
         if (input_reader::smaller_than_rev_cmpl(s))
             continue;
         cout << s + " |";
