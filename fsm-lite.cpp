@@ -53,7 +53,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
 
     labels[j] = k;
     if (j != bwtendpos || k != 0) {
-        cerr << "Labeling failed, j = " << j << ", k = " << k << endl;
+        cerr << "[ERROR]Labeling failed, j = " << j << ", k = " << k << endl;
         exit(1);
     }
 
@@ -70,7 +70,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
         j_sum += wt.rank(n, i);
 
     if (j_sum != n) {
-        cerr << "Label sum failed, j = " << j_sum << ", n = " << n << endl;
+        cerr << "[ERROR]Label sum failed, j = " << j_sum << ", n = " << n << endl;
         exit(1);
     }
 }
