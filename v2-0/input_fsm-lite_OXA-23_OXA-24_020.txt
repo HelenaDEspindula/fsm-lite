@@ -8,3 +8,13 @@ GCA_000369365_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/nc
 GCA_000299655_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000299655.1_ASM29965v1_genomic.fna
 GCA_000299675_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000299675.1_ASM29967v1_genomic.fna
 GCA_000359725_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000359725.1_AB48055_genomic.fna
+GCA_000581615_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000581615.1_ASM58161v1_genomic.fna
+GCA_000581335_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000581335.1_ASM58133v1_genomic.fna
+GCA_000580335_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000580335.1_ASM58033v1_genomic.fna
+GCA_000580215_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000580215.1_ASM58021v1_genomic.fna
+GCA_000581535_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000581535.1_ASM58153v1_genomic.fna
+GCA_000580315_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000580315.1_ASM58031v1_genomic.fna
+GCA_000681695_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000681695.1_ASM68169v1_genomic.fna
+GCA_000580175_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000580175.1_ASM58017v1_genomic.fna
+GCA_000580295_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000580295.1_ASM58029v1_genomic.fna
+GCA_000581635_1	/home/joyce.souza/LACTAS-HELISSON-01/Abaumannii/genomes/BVBRC/ncbi_dataset/data/subdir_1/GCA_000581635.1_ASM58163v1_genomic.fna

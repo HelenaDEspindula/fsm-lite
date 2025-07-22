@@ -1,9 +1,9 @@
 #!/bin/bash
 
-INPUT_FILE=/input_fsm-lite_OXA-23_OXA-24_100.txt
+INPUT_FILE=/input_fsm-lite_OXA-23_OXA-24_010.txt
 TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
-LOG_DIR="logs/fsm-lite"
-TMP_DIR="tmp/fsm-lite"
+LOG_DIR="logs"
+TMP_DIR="tmp"
 MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.txt"
 OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
 TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
@@ -21,22 +21,34 @@ echo "Iniciando monitoramento do fsm-lite em $TIMESTAMP..." > "$MONITOR_LOG"
 echo "Iniciando execução do fsm-lite em $TIMESTAMP..." > "$OUTPUT_LOG"
 echo "Salvando saída em: $OUTPUT_RES"
 
-# Criar sessão tmux para executar fsm-lite com stdout + stderr no mesmo log
+# Inicia fsm-lite dentro do tmux
 tmux new-session -d -s "$SESSION_RUN" "bash -c '
-  echo Iniciando fsm-lite...
-  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\" ; } \
+  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\ ; } \
     > \"${OUTPUT_RES}\" \
     2> \"${OUTPUT_LOG}\"
 '"
 
-# Aguardar e capturar o PID do processo
-sleep 3
-FSM_PID=$(pgrep -f "./fsm-lite -l ${INPUT_FILE}")
+# Aguarda o tmux iniciar a sessão
+sleep 1
 
+# Captura o PID do processo bash dentro do tmux
+PANE_PID=$(tmux list-panes -t "$SESSION_RUN" -F '#{pane_pid}')
+
+# Aguarda 1 segundo para garantir que o fsm-lite foi chamado
+sleep 1
+
+# Captura o PID do fsm-lite filho do bash dentro do tmux
+FSM_PID=$(pgrep -P "$PANE_PID" -f "fsm-lite")
+
+# Verifica se o PID foi encontrado
 if [ -z "$FSM_PID" ]; then
   echo "Erro: não foi possível identificar o PID de fsm-lite."
+  echo "Use: tmux attach -t $SESSION_RUN para depurar."
   exit 1
 fi
+
+echo "fsm-lite iniciado com PID $FSM_PID"
+
 
 # Comando do monitoramento
 # Comando do monitoramento
