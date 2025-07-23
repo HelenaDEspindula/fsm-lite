@@ -1,0 +1,715 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{35,38,41}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.58,0.85,0.30}{\textbf{\colorbox[rgb]{0.30,0.12,0.14}{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.25,0.50,0.35}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.16,0.50,0.73}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.96,0.45,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.50,0.55,0.55}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.24,0.68,0.91}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.48,0.49,0.49}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.50,0.55,0.55}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.15,0.68,0.68}{\textbf{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.99,0.74,0.29}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.16,0.50,0.73}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.96,0.45,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.64,0.20,0.25}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.85,0.27,0.33}{\underline{#1}}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.60,1.00}{\textbf{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.96,0.45,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.56,0.27,0.68}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.15,0.68,0.38}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.77,0.36,0.00}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.81,0.81,0.76}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.81,0.81,0.76}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.81,0.76}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.15,0.68,0.38}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.15,0.68,0.38}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.16,0.50,0.73}{\colorbox[rgb]{0.08,0.19,0.26}{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.24,0.68,0.91}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.85,0.27,0.33}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.96,0.31,0.31}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.15,0.68,0.68}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.85,0.27,0.33}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.85,0.27,0.33}{#1}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Report fsm-lite},
+  pdfauthor={Profa Dra Helena R. S. D'Espindula},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Report fsm-lite}
+\author{Profa Dra Helena R. S. D'Espindula}
+\date{2025-07-23}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\section{Programa original}\label{programa-original}
+
+Arquivo \url{original/fsm-lite.cpp}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\PreprocessorTok{\#include }\ImportTok{"default.h"}
+\PreprocessorTok{\#include }\ImportTok{"configuration.h"}
+\PreprocessorTok{\#include }\ImportTok{"input\_reader.h"}
+\PreprocessorTok{\#include }\ImportTok{\textless{}sdsl/suffix\_trees.hpp\textgreater{}}\PreprocessorTok{ }\CommentTok{// }\AlertTok{TODO}\CommentTok{: replace with csa+lcp array}
+\PreprocessorTok{\#include }\ImportTok{\textless{}sdsl/wt\_algorithm.hpp\textgreater{}}
+\PreprocessorTok{\#include }\ImportTok{\textless{}iostream\textgreater{}}
+\PreprocessorTok{\#include }\ImportTok{\textless{}vector\textgreater{}}
+\PreprocessorTok{\#include }\ImportTok{\textless{}cstdlib\textgreater{}}\PreprocessorTok{ }\CommentTok{// std::exit()}
+\NormalTok{using namespace std}\OperatorTok{;}
+
+\KeywordTok{typedef}\NormalTok{ sdsl}\OperatorTok{::}\NormalTok{cst\_sct3}\OperatorTok{\textless{}\textgreater{}}\NormalTok{ cst\_t}\OperatorTok{;}
+\KeywordTok{typedef}\NormalTok{ sdsl}\OperatorTok{::}\NormalTok{wt\_int}\OperatorTok{\textless{}\textgreater{}}\NormalTok{ wt\_t}\OperatorTok{;}
+\KeywordTok{typedef}\NormalTok{ sdsl}\OperatorTok{::}\NormalTok{bit\_vector bitv\_t}\OperatorTok{;}
+\KeywordTok{typedef}\NormalTok{ cst\_t}\OperatorTok{::}\NormalTok{char\_type char\_type}\OperatorTok{;}
+\KeywordTok{typedef}\NormalTok{ cst\_t}\OperatorTok{::}\NormalTok{node\_type node\_type}\OperatorTok{;}
+\KeywordTok{typedef}\NormalTok{ wt\_t}\OperatorTok{::}\NormalTok{size\_type size\_type}\OperatorTok{;}
+
+\CommentTok{/**}
+\CommentTok{ * Construct the sequence labels}
+\CommentTok{ *}
+\CommentTok{ * Assumes that the number of input files is less than 2\^{}DBITS.}
+\CommentTok{ * The value of DBITS has to be set at compile time (in defaults.h).}
+\CommentTok{ * Large DBITS values result in large memory requirements for wt\_init().}
+\CommentTok{ */}
+\DataTypeTok{void}\NormalTok{ wt\_init}\OperatorTok{(}\NormalTok{wt\_t }\OperatorTok{\&}\NormalTok{wt}\OperatorTok{,}\NormalTok{ bitv\_t }\OperatorTok{\&}\NormalTok{separator}\OperatorTok{,}\NormalTok{ cst\_t }\OperatorTok{\&}\NormalTok{cst}\OperatorTok{,}\NormalTok{ input\_reader }\OperatorTok{*}\NormalTok{ir}\OperatorTok{,}\NormalTok{ configuration }\OperatorTok{\&}\NormalTok{config}\OperatorTok{)}
+\OperatorTok{\{}
+    \DataTypeTok{uint64\_t}\NormalTok{ n }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{size}\OperatorTok{();}
+\NormalTok{    sdsl}\OperatorTok{::}\NormalTok{int\_vector}\OperatorTok{\textless{}}\NormalTok{DBITS}\OperatorTok{\textgreater{}}\NormalTok{ labels}\OperatorTok{(}\NormalTok{n}\OperatorTok{,} \OperatorTok{\textasciitilde{}}\DecValTok{0}\BuiltInTok{u}\OperatorTok{);}
+\NormalTok{    separator }\OperatorTok{=}\NormalTok{ bitv\_t}\OperatorTok{(}\NormalTok{n}\OperatorTok{,} \DecValTok{0}\OperatorTok{);}
+    \DataTypeTok{uint64\_t}\NormalTok{ k }\OperatorTok{=}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{(){-}}\DecValTok{1}\OperatorTok{;}
+    \DataTypeTok{uint64\_t}\NormalTok{ j }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{wavelet\_tree}\OperatorTok{.}\NormalTok{select}\OperatorTok{(}\DecValTok{1}\OperatorTok{,} \DecValTok{0}\OperatorTok{);}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{debug}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"bwt end marker pos = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ j }\OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+    \DataTypeTok{uint64\_t}\NormalTok{ bwtendpos }\OperatorTok{=}\NormalTok{ j}\OperatorTok{;}
+\NormalTok{    j }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{lf}\OperatorTok{[}\NormalTok{j}\OperatorTok{];}
+\NormalTok{    labels}\OperatorTok{[}\NormalTok{j}\OperatorTok{]} \OperatorTok{=} \DecValTok{0}\OperatorTok{;}  \CommentTok{// Label of last byte}
+\NormalTok{    separator}\OperatorTok{[}\NormalTok{n}\OperatorTok{{-}}\DecValTok{1}\OperatorTok{]} \OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+\NormalTok{    separator}\OperatorTok{[}\NormalTok{n}\OperatorTok{{-}}\DecValTok{2}\OperatorTok{]} \OperatorTok{=} \DecValTok{1}\OperatorTok{;}
+\NormalTok{    j }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{lf}\OperatorTok{[}\NormalTok{j}\OperatorTok{];}
+    \ControlFlowTok{for} \OperatorTok{(}\DataTypeTok{uint64\_t}\NormalTok{ i }\OperatorTok{=}\NormalTok{ n}\OperatorTok{{-}}\DecValTok{2}\OperatorTok{;}\NormalTok{ i }\OperatorTok{\textgreater{}} \DecValTok{0}\OperatorTok{;}\NormalTok{ i}\OperatorTok{{-}{-})} \OperatorTok{\{}
+\NormalTok{        char\_type c }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{bwt}\OperatorTok{[}\NormalTok{j}\OperatorTok{];}
+\NormalTok{        labels}\OperatorTok{[}\NormalTok{j}\OperatorTok{]} \OperatorTok{=}\NormalTok{ k}\OperatorTok{;}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{c }\OperatorTok{==} \CharTok{\textquotesingle{}$\textquotesingle{}}\OperatorTok{)}
+\NormalTok{            k }\OperatorTok{{-}{-};}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{c }\OperatorTok{==} \CharTok{\textquotesingle{}$\textquotesingle{}} \OperatorTok{||}\NormalTok{ c }\OperatorTok{==} \CharTok{\textquotesingle{}\#\textquotesingle{}}\OperatorTok{)}
+\NormalTok{            separator}\OperatorTok{[}\NormalTok{i}\OperatorTok{{-}}\DecValTok{1}\OperatorTok{]} \OperatorTok{=} \DecValTok{1}\OperatorTok{;}
+        
+\NormalTok{        j }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{lf}\OperatorTok{[}\NormalTok{j}\OperatorTok{];}
+    \OperatorTok{\}}
+\NormalTok{    labels}\OperatorTok{[}\NormalTok{j}\OperatorTok{]} \OperatorTok{=}\NormalTok{ k}\OperatorTok{;}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{j }\OperatorTok{!=}\NormalTok{ bwtendpos }\OperatorTok{||}\NormalTok{ k }\OperatorTok{!=} \DecValTok{0}\OperatorTok{)} \CommentTok{// Assert}
+    \OperatorTok{\{}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Labeling failed, j = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ j }\OperatorTok{\textless{}\textless{}} \StringTok{", k = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ k }\OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+\NormalTok{        exit}\OperatorTok{(}\DecValTok{1}\OperatorTok{);}
+    \OperatorTok{\}}
+
+    \CommentTok{//}\AlertTok{TODO}\CommentTok{ cleanup}
+    \CommentTok{/*for (uint64\_t i = 0; i \textless{} n; ++i) }
+\CommentTok{        cerr \textless{}\textless{} cst.csa.text[i];}
+\CommentTok{    cerr \textless{}\textless{} endl;}
+\CommentTok{    for (uint64\_t i = 0; i \textless{} n; ++i) }
+\CommentTok{        cerr \textless{}\textless{} separator[i];}
+\CommentTok{    cerr \textless{}\textless{} endl;}
+\CommentTok{    for (uint64\_t i = 0; i \textless{} n; ++i) }
+\CommentTok{        cerr \textless{}\textless{} labels[cst.csa.isa[i]];}
+\CommentTok{    cerr \textless{}\textless{} endl;}
+\CommentTok{    */}  
+        
+\NormalTok{    std}\OperatorTok{::}\NormalTok{string tmp\_file }\OperatorTok{=}\NormalTok{ sdsl}\OperatorTok{::}\NormalTok{ram\_file\_name}\OperatorTok{(}\NormalTok{sdsl}\OperatorTok{::}\NormalTok{util}\OperatorTok{::}\NormalTok{to\_string}\OperatorTok{(}\NormalTok{sdsl}\OperatorTok{::}\NormalTok{util}\OperatorTok{::}\NormalTok{pid}\OperatorTok{())+}\StringTok{"\_"}\OperatorTok{+}\NormalTok{sdsl}\OperatorTok{::}\NormalTok{util}\OperatorTok{::}\NormalTok{to\_string}\OperatorTok{(}\NormalTok{sdsl}\OperatorTok{::}\NormalTok{util}\OperatorTok{::}\NormalTok{id}\OperatorTok{()));}
+\NormalTok{    sdsl}\OperatorTok{::}\NormalTok{store\_to\_file}\OperatorTok{(}\NormalTok{labels}\OperatorTok{,}\NormalTok{ tmp\_file}\OperatorTok{);}
+\NormalTok{    sdsl}\OperatorTok{::}\NormalTok{int\_vector\_buffer}\OperatorTok{\textless{}}\NormalTok{DBITS}\OperatorTok{\textgreater{}}\NormalTok{ text\_buf}\OperatorTok{(}\NormalTok{tmp\_file}\OperatorTok{);}
+\NormalTok{    wt }\OperatorTok{=}\NormalTok{ wt\_t}\OperatorTok{(}\NormalTok{text\_buf}\OperatorTok{,}\NormalTok{ labels}\OperatorTok{.}\NormalTok{size}\OperatorTok{());}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{debug}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"wt size = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ wt}\OperatorTok{.}\NormalTok{size}\OperatorTok{()} \OperatorTok{\textless{}\textless{}} \StringTok{", n = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ n }\OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+\NormalTok{    j }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+    \ControlFlowTok{for} \OperatorTok{(}\DataTypeTok{uint64\_t}\NormalTok{ i }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}\NormalTok{ i }\OperatorTok{\textless{}}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{();} \OperatorTok{++}\NormalTok{i}\OperatorTok{)}
+\NormalTok{        j }\OperatorTok{+=}\NormalTok{ wt}\OperatorTok{.}\NormalTok{rank}\OperatorTok{(}\NormalTok{n}\OperatorTok{,}\NormalTok{ i}\OperatorTok{);}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{j }\OperatorTok{!=}\NormalTok{ n}\OperatorTok{)} \CommentTok{// Assert}
+    \OperatorTok{\{}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Label sum failed, j = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ j }\OperatorTok{\textless{}\textless{}} \StringTok{", n = "} \OperatorTok{\textless{}\textless{}}\NormalTok{ n }\OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+\NormalTok{        exit}\OperatorTok{(}\DecValTok{1}\OperatorTok{);}
+    \OperatorTok{\}}
+    
+\OperatorTok{\}}
+    
+\DataTypeTok{int}\NormalTok{ main}\OperatorTok{(}\DataTypeTok{int}\NormalTok{ argc}\OperatorTok{,} \DataTypeTok{char} \OperatorTok{**}\NormalTok{ argv}\OperatorTok{)}
+\OperatorTok{\{}
+\NormalTok{    configuration config}\OperatorTok{(}\NormalTok{argc}\OperatorTok{,}\NormalTok{ argv}\OperatorTok{);}
+    \ControlFlowTok{if} \OperatorTok{(!}\NormalTok{config}\OperatorTok{.}\NormalTok{good}\OperatorTok{)}
+\NormalTok{        config}\OperatorTok{.}\NormalTok{print\_short\_usage}\OperatorTok{();}
+
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{verbose}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Reading input files..."} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+\NormalTok{    input\_reader }\OperatorTok{*}\NormalTok{ir }\OperatorTok{=}\NormalTok{ input\_reader}\OperatorTok{::}\NormalTok{build}\OperatorTok{(}\NormalTok{config}\OperatorTok{);}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{verbose}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Read "} \OperatorTok{\textless{}\textless{}}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{()} \OperatorTok{\textless{}\textless{}} \StringTok{" input files and "} \OperatorTok{\textless{}\textless{}}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{total\_seqs}\OperatorTok{()} \OperatorTok{\textless{}\textless{}} \StringTok{" sequences of total length "} \OperatorTok{\textless{}\textless{}}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{total\_size}\OperatorTok{()} \OperatorTok{\textless{}\textless{}} \StringTok{" (includes rev.compl. sequences)"} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+    
+    \CommentTok{/**}
+\CommentTok{     * Initialize the data structures}
+\CommentTok{     */}
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{verbose}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Constructing the data structures..."} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+\NormalTok{    cst\_t cst}\OperatorTok{;}    
+\NormalTok{    construct}\OperatorTok{(}\NormalTok{cst}\OperatorTok{,}\NormalTok{ config}\OperatorTok{.}\NormalTok{tmpfile }\OperatorTok{+} \StringTok{".tmp"}\OperatorTok{,} \DecValTok{1}\OperatorTok{);}
+    \ControlFlowTok{if} \OperatorTok{(!}\NormalTok{cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{size}\OperatorTok{())}
+    \OperatorTok{\{}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"error: unable to construct the data structure; out of memory?"} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;} 
+\NormalTok{        abort}\OperatorTok{();}
+    \OperatorTok{\}}
+    
+\NormalTok{    wt\_t label\_wt}\OperatorTok{;}
+\NormalTok{    bitv\_t separator}\OperatorTok{;}
+\NormalTok{    wt\_init}\OperatorTok{(}\NormalTok{label\_wt}\OperatorTok{,}\NormalTok{ separator}\OperatorTok{,}\NormalTok{ cst}\OperatorTok{,}\NormalTok{ ir}\OperatorTok{,}\NormalTok{ config}\OperatorTok{);}
+
+\NormalTok{    bitv\_t}\OperatorTok{::}\NormalTok{rank\_1\_type sep\_rank1}\OperatorTok{(\&}\NormalTok{separator}\OperatorTok{);}
+    \CommentTok{//bitv\_t::select\_1\_type sep\_select1(\&separator); }\AlertTok{TODO}\CommentTok{ Remove?}
+\NormalTok{    assert}\OperatorTok{(}\NormalTok{sep\_rank1}\OperatorTok{(}\NormalTok{cst}\OperatorTok{.}\NormalTok{size}\OperatorTok{())} \OperatorTok{==}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{total\_seqs}\OperatorTok{());}
+    
+\NormalTok{    size\_type support }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+\NormalTok{    vector}\OperatorTok{\textless{}}\NormalTok{wt\_t}\OperatorTok{::}\NormalTok{value\_type}\OperatorTok{\textgreater{}}\NormalTok{ labels}\OperatorTok{(}\NormalTok{ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{(),} \DecValTok{0}\OperatorTok{);}
+\NormalTok{    vector}\OperatorTok{\textless{}}\NormalTok{size\_type}\OperatorTok{\textgreater{}}\NormalTok{ rank\_sp}\OperatorTok{(}\NormalTok{ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{(),} \DecValTok{0}\OperatorTok{);}
+\NormalTok{    vector}\OperatorTok{\textless{}}\NormalTok{size\_type}\OperatorTok{\textgreater{}}\NormalTok{ rank\_ep}\OperatorTok{(}\NormalTok{ir}\OperatorTok{{-}\textgreater{}}\NormalTok{size}\OperatorTok{(),} \DecValTok{0}\OperatorTok{);}
+
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{verbose}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"Construction complete, the main index requires "} \OperatorTok{\textless{}\textless{}}\NormalTok{ size\_in\_mega\_bytes}\OperatorTok{(}\NormalTok{cst}\OperatorTok{)} \OperatorTok{\textless{}\textless{}} \StringTok{" MiB plus "} \OperatorTok{\textless{}\textless{}}\NormalTok{ size\_in\_mega\_bytes}\OperatorTok{(}\NormalTok{label\_wt}\OperatorTok{)} \OperatorTok{\textless{}\textless{}} \StringTok{" MiB for labels."} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+    
+    \CommentTok{/**}
+\CommentTok{     * Main loop}
+\CommentTok{     */}
+\NormalTok{    node\_type root }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{root}\OperatorTok{();}
+\NormalTok{    vector}\OperatorTok{\textless{}}\NormalTok{node\_type}\OperatorTok{\textgreater{}}\NormalTok{ buffer}\OperatorTok{;}
+\NormalTok{    buffer}\OperatorTok{.}\NormalTok{reserve}\OperatorTok{(}\DecValTok{1024}\OperatorTok{*}\DecValTok{1024}\OperatorTok{);}
+    \ControlFlowTok{for} \OperatorTok{(}\KeywordTok{auto}\OperatorTok{\&}\NormalTok{ child}\OperatorTok{:}\NormalTok{ cst}\OperatorTok{.}\NormalTok{children}\OperatorTok{(}\NormalTok{root}\OperatorTok{))}
+\NormalTok{        buffer}\OperatorTok{.}\NormalTok{push\_back}\OperatorTok{(}\NormalTok{child}\OperatorTok{);}
+    \ControlFlowTok{while} \OperatorTok{(!}\NormalTok{buffer}\OperatorTok{.}\NormalTok{empty}\OperatorTok{())}
+    \OperatorTok{\{}
+\NormalTok{        node\_type }\DataTypeTok{const}\NormalTok{ node }\OperatorTok{=}\NormalTok{ buffer}\OperatorTok{.}\NormalTok{back}\OperatorTok{();}
+\NormalTok{        buffer}\OperatorTok{.}\NormalTok{pop\_back}\OperatorTok{();}        
+        \DataTypeTok{unsigned}\NormalTok{ depth }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{depth}\OperatorTok{(}\NormalTok{node}\OperatorTok{);}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{depth }\OperatorTok{\textless{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{maxlength}\OperatorTok{)}
+            \ControlFlowTok{for} \OperatorTok{(}\KeywordTok{auto}\OperatorTok{\&}\NormalTok{ child}\OperatorTok{:}\NormalTok{ cst}\OperatorTok{.}\NormalTok{children}\OperatorTok{(}\NormalTok{node}\OperatorTok{))}
+\NormalTok{                buffer}\OperatorTok{.}\NormalTok{push\_back}\OperatorTok{(}\NormalTok{child}\OperatorTok{);}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{depth }\OperatorTok{\textless{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{minlength}\OperatorTok{)}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{cst}\OperatorTok{.}\NormalTok{is\_leaf}\OperatorTok{(}\NormalTok{node}\OperatorTok{))}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        
+        \CommentTok{// Process the candidate node}
+\NormalTok{        size\_type sp }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{lb}\OperatorTok{(}\NormalTok{node}\OperatorTok{);}
+\NormalTok{        size\_type ep }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{rb}\OperatorTok{(}\NormalTok{node}\OperatorTok{);}
+\NormalTok{        node\_type wn }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{wl}\OperatorTok{(}\NormalTok{node}\OperatorTok{,}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{.}\NormalTok{bwt}\OperatorTok{[}\NormalTok{sp}\OperatorTok{]);}
+        \CommentTok{/*if (config.debug)}
+\CommentTok{        \{}
+\CommentTok{            size\_type pos = cst.csa[sp];}
+\CommentTok{            auto s = extract(cst.csa, pos, pos + depth {-} 1);}
+\CommentTok{            cerr \textless{}\textless{} "at node = " \textless{}\textless{} depth \textless{}\textless{} "{-}[" \textless{}\textless{} sp \textless{}\textless{} "," \textless{}\textless{} ep \textless{}\textless{} "], wl = " \textless{}\textless{} (wn != root);}
+\CommentTok{            if (wn!=root)}
+\CommentTok{                cerr \textless{}\textless{} "[" \textless{}\textless{} cst.rb(wn){-}cst.lb(wn) \textless{}\textless{} " vs " \textless{}\textless{} ep{-}sp \textless{}\textless{} "]";}
+\CommentTok{            cerr \textless{}\textless{} ", seq = " \textless{}\textless{} s \textless{}\textless{} endl;}
+\CommentTok{            \}*/}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{wn }\OperatorTok{==}\NormalTok{ root }\OperatorTok{\&\&}\NormalTok{ config}\OperatorTok{.}\NormalTok{debug}\OperatorTok{)}
+        \OperatorTok{\{}
+\NormalTok{            cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"warning: no Weiner{-}link at "} \OperatorTok{\textless{}\textless{}}\NormalTok{ depth }\OperatorTok{\textless{}\textless{}} \StringTok{"{-}["} \OperatorTok{\textless{}\textless{}}\NormalTok{ sp }\OperatorTok{\textless{}\textless{}} \StringTok{","} \OperatorTok{\textless{}\textless{}}\NormalTok{ ep }\OperatorTok{\textless{}\textless{}} \StringTok{"]"} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        \OperatorTok{\}}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{depth }\OperatorTok{\textless{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{maxlength }\OperatorTok{\&\&}\NormalTok{ cst}\OperatorTok{.}\NormalTok{rb}\OperatorTok{(}\NormalTok{wn}\OperatorTok{){-}}\NormalTok{cst}\OperatorTok{.}\NormalTok{lb}\OperatorTok{(}\NormalTok{wn}\OperatorTok{)} \OperatorTok{==}\NormalTok{ ep}\OperatorTok{{-}}\NormalTok{sp}\OperatorTok{)}
+            \ControlFlowTok{continue}\OperatorTok{;} \CommentTok{// not left{-}branching}
+
+\NormalTok{        sdsl}\OperatorTok{::}\NormalTok{interval\_symbols}\OperatorTok{(}\NormalTok{label\_wt}\OperatorTok{,}\NormalTok{ sp}\OperatorTok{,}\NormalTok{ ep}\OperatorTok{+}\DecValTok{1}\OperatorTok{,}\NormalTok{ support}\OperatorTok{,}\NormalTok{ labels}\OperatorTok{,}\NormalTok{ rank\_sp}\OperatorTok{,}\NormalTok{ rank\_ep}\OperatorTok{);}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{support }\OperatorTok{\textless{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{minsupport }\OperatorTok{||}\NormalTok{ support }\OperatorTok{\textgreater{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{maxsupport}\OperatorTok{)}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        
+\NormalTok{        size\_type truesupp }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+        \ControlFlowTok{for} \OperatorTok{(}\NormalTok{size\_type i }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}\NormalTok{ i }\OperatorTok{\textless{}}\NormalTok{ support}\OperatorTok{;} \OperatorTok{++}\NormalTok{i}\OperatorTok{)}
+            \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{minfreq }\OperatorTok{\textless{}=}\NormalTok{ rank\_ep}\OperatorTok{[}\NormalTok{i}\OperatorTok{]{-}}\NormalTok{rank\_sp}\OperatorTok{[}\NormalTok{i}\OperatorTok{])}
+                \OperatorTok{++}\NormalTok{truesupp}\OperatorTok{;}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{truesupp }\OperatorTok{\textless{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{minsupport}\OperatorTok{)}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{depth }\OperatorTok{\textgreater{}}\NormalTok{ config}\OperatorTok{.}\NormalTok{maxlength}\OperatorTok{)}
+\NormalTok{            depth }\OperatorTok{=}\NormalTok{ config}\OperatorTok{.}\NormalTok{maxlength}\OperatorTok{;}
+\NormalTok{        size\_type pos }\OperatorTok{=}\NormalTok{ cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{[}\NormalTok{sp}\OperatorTok{];}
+        \CommentTok{// Check for separator symbol }\AlertTok{TODO}\CommentTok{ cleanup}
+        \CommentTok{/*unsigned p\_depth = cst.depth(cst.parent(node));}
+\CommentTok{        if (sep\_rank1(pos) != sep\_rank1(pos + p\_depth))}
+\CommentTok{            continue; // Separator occurs above parent node}
+\CommentTok{        if (sep\_rank1(pos) != sep\_rank1(pos + depth))}
+\CommentTok{            depth = sep\_select1(sep\_rank1(pos)+1) {-} pos +1; // Separator above current node      }
+\CommentTok{        */}
+        
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{sep\_rank1}\OperatorTok{(}\NormalTok{pos}\OperatorTok{)} \OperatorTok{!=}\NormalTok{ sep\_rank1}\OperatorTok{(}\NormalTok{pos }\OperatorTok{+}\NormalTok{ depth}\OperatorTok{))}
+            \ControlFlowTok{continue}\OperatorTok{;}
+        \KeywordTok{auto}\NormalTok{ s }\OperatorTok{=}\NormalTok{ extract}\OperatorTok{(}\NormalTok{cst}\OperatorTok{.}\NormalTok{csa}\OperatorTok{,}\NormalTok{ pos}\OperatorTok{,}\NormalTok{ pos }\OperatorTok{+}\NormalTok{ depth }\OperatorTok{{-}} \DecValTok{1}\OperatorTok{);}
+        \ControlFlowTok{if} \OperatorTok{(}\NormalTok{input\_reader}\OperatorTok{::}\NormalTok{smaller\_than\_rev\_cmpl}\OperatorTok{(}\NormalTok{s}\OperatorTok{))}
+            \ControlFlowTok{continue}\OperatorTok{;}
+\NormalTok{        cout }\OperatorTok{\textless{}\textless{}}\NormalTok{ s }\OperatorTok{+} \StringTok{" |"}\OperatorTok{;}
+        \ControlFlowTok{for} \OperatorTok{(}\NormalTok{size\_type i }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}\NormalTok{ i }\OperatorTok{\textless{}}\NormalTok{ support}\OperatorTok{;} \OperatorTok{++}\NormalTok{i}\OperatorTok{)}
+            \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{minfreq }\OperatorTok{\textless{}=}\NormalTok{ rank\_ep}\OperatorTok{[}\NormalTok{i}\OperatorTok{]{-}}\NormalTok{rank\_sp}\OperatorTok{[}\NormalTok{i}\OperatorTok{])}
+\NormalTok{                cout }\OperatorTok{\textless{}\textless{}} \CharTok{\textquotesingle{} \textquotesingle{}} \OperatorTok{\textless{}\textless{}}\NormalTok{ ir}\OperatorTok{{-}\textgreater{}}\NormalTok{id}\OperatorTok{(}\NormalTok{labels}\OperatorTok{[}\NormalTok{i}\OperatorTok{])} \OperatorTok{\textless{}\textless{}} \CharTok{\textquotesingle{}:\textquotesingle{}} \OperatorTok{\textless{}\textless{}}\NormalTok{ rank\_ep}\OperatorTok{[}\NormalTok{i}\OperatorTok{]{-}}\NormalTok{rank\_sp}\OperatorTok{[}\NormalTok{i}\OperatorTok{];}
+\NormalTok{        cout }\OperatorTok{\textless{}\textless{}} \CharTok{\textquotesingle{}}\SpecialCharTok{\textbackslash{}n}\CharTok{\textquotesingle{}}\OperatorTok{;}
+    \OperatorTok{\}}
+    
+    \ControlFlowTok{if} \OperatorTok{(}\NormalTok{config}\OperatorTok{.}\NormalTok{verbose}\OperatorTok{)}
+\NormalTok{        cerr }\OperatorTok{\textless{}\textless{}} \StringTok{"All done."} \OperatorTok{\textless{}\textless{}}\NormalTok{ endl}\OperatorTok{;}    
+\NormalTok{    delete ir}\OperatorTok{;}\NormalTok{ ir }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+    \ControlFlowTok{return} \DecValTok{0}\OperatorTok{;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Arquivo \url{original/Makefile}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{SDSL\_INSTALL\_PREFIX}\OperatorTok{=}\VariableTok{$\{HOME\}}\NormalTok{/software}
+
+\VariableTok{CPPFLAGS}\OperatorTok{=}\NormalTok{{-}std=c++11 }\ExtensionTok{{-}I}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\ExtensionTok{/include} \AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}
+\VariableTok{LIBS}\OperatorTok{=}\NormalTok{{-}lsdsl }\ExtensionTok{{-}ldivsufsort} \AttributeTok{{-}ldivsufsort64}
+\ExtensionTok{OBJ}\NormalTok{ = configuration.o input\_reader.o fsm{-}lite.o}
+
+\ExtensionTok{fsm{-}lite:} \VariableTok{$(}\ExtensionTok{OBJ}\VariableTok{)}
+    \VariableTok{$(}\ExtensionTok{LINK.cpp}\VariableTok{)}\NormalTok{ $\^{} }\AttributeTok{{-}L}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\NormalTok{/lib }\VariableTok{$(}\ExtensionTok{LIBS}\VariableTok{)} \AttributeTok{{-}o} \VariableTok{$@}
+
+\ExtensionTok{test:}\NormalTok{ fsm{-}lite}
+    \ExtensionTok{./fsm{-}lite} \AttributeTok{{-}l}\NormalTok{ test.list }\AttributeTok{{-}t}\NormalTok{ tmp }\AttributeTok{{-}v} \AttributeTok{{-}{-}debug} \AttributeTok{{-}m}\NormalTok{ 1}
+
+\ExtensionTok{clean:}
+    \VariableTok{$(}\ExtensionTok{RM}\VariableTok{)}\NormalTok{ fsm{-}lite }\PreprocessorTok{*}\NormalTok{.o }\PreprocessorTok{*}\NormalTok{\textasciitilde{}}
+
+\ExtensionTok{depend:}
+    \ExtensionTok{g++} \AttributeTok{{-}MM} \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\NormalTok{/include }\PreprocessorTok{*}\NormalTok{.cpp }\OperatorTok{\textgreater{}}\NormalTok{ dependencies.mk}
+
+\ExtensionTok{include}\NormalTok{ dependencies.mk}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Versao 2.0}\label{versao-2.0}
+
+\begin{itemize}
+\item
+  Ter lista de arquivos e permiss'ao de leitura dos mesmos
+\item
+  Instalado sdsl-lite v2.0.3 na home e atualizado Makefile
+\end{itemize}
+
+\url{https://github.com/simongog/sdsl-lite/releases/tag/v2.0.3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{$}\NormalTok{ cd sdsl{-}lite{-}2.0.3/}
+\ExtensionTok{$}\NormalTok{ ./install.sh }
+\ExtensionTok{$}\NormalTok{ cd}
+\ExtensionTok{$}\NormalTok{ cd LACTAS{-}HELISSON{-}01/Helena{-}stuff/fsm{-}lite/v2{-}0/}
+\end{Highlighting}
+\end{Shaded}
+
+Devido a um serie de erros de compilacao foi necessario fazer o seguinte
+- Modificar o makefile
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{SDSL\_INSTALL\_PREFIX}\OperatorTok{=}\VariableTok{$\{HOME\}}\NormalTok{/sdsl{-}lite{-}2.0.3}
+\VariableTok{DIVSUFSORT\_INCLUDE}\OperatorTok{=}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\NormalTok{/build/external/libdivsufsort{-}2.0.1/include}
+
+\VariableTok{CPPFLAGS}\OperatorTok{=}\NormalTok{{-}std=c++11 }\ExtensionTok{{-}I}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\ExtensionTok{/include} \AttributeTok{{-}I}\VariableTok{$(}\ExtensionTok{DIVSUFSORT\_INCLUDE}\VariableTok{)} \AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}
+
+\VariableTok{LIBS}\OperatorTok{=}\NormalTok{{-}lsdsl }\ExtensionTok{{-}ldivsufsort} \AttributeTok{{-}ldivsufsort64}
+\ExtensionTok{OBJ}\NormalTok{ = configuration.o input\_reader.o fsm{-}lite.o}
+
+\ExtensionTok{fsm{-}lite:} \VariableTok{$(}\ExtensionTok{OBJ}\VariableTok{)}
+    \VariableTok{$(}\ExtensionTok{LINK.cpp}\VariableTok{)}\NormalTok{ $\^{} }\AttributeTok{{-}L}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\NormalTok{/lib }\VariableTok{$(}\ExtensionTok{LIBS}\VariableTok{)} \AttributeTok{{-}o} \VariableTok{$@}
+
+\ExtensionTok{test:}\NormalTok{ fsm{-}lite}
+    \ExtensionTok{./fsm{-}lite} \AttributeTok{{-}l}\NormalTok{ test.list }\AttributeTok{{-}t}\NormalTok{ tmp }\AttributeTok{{-}v} \AttributeTok{{-}{-}debug} \AttributeTok{{-}m}\NormalTok{ 1}
+
+\ExtensionTok{clean:}
+    \VariableTok{$(}\ExtensionTok{RM}\VariableTok{)}\NormalTok{ fsm{-}lite }\PreprocessorTok{*}\NormalTok{.o }\PreprocessorTok{*}\NormalTok{\textasciitilde{}}
+
+\ExtensionTok{depend:}
+    \ExtensionTok{g++} \AttributeTok{{-}MM} \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\VariableTok{$(}\ExtensionTok{CPPFLAGS}\VariableTok{)} \AttributeTok{{-}I}\VariableTok{$(}\ExtensionTok{SDSL\_INSTALL\_PREFIX}\VariableTok{)}\NormalTok{/include }\PreprocessorTok{*}\NormalTok{.cpp }\OperatorTok{\textgreater{}}\NormalTok{ dependencies.mk}
+
+\ExtensionTok{include}\NormalTok{ dependencies.mk}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Executar no terminal
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{$}\NormalTok{ cd \textasciitilde{}/sdsl{-}lite{-}2.0.3}
+\ExtensionTok{$}\NormalTok{ mkdir }\AttributeTok{{-}p}\NormalTok{ build}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3$}\NormalTok{ cd build}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3/build$}\NormalTok{ cmake .. }\AttributeTok{{-}DCMAKE\_INSTALL\_PREFIX}\OperatorTok{=}\VariableTok{$HOME}\NormalTok{/sdsl{-}lite{-}2.0.3}
+\ExtensionTok{{-}{-}}\NormalTok{ Compiler is recent enough to support C++11.}
+\ExtensionTok{{-}{-}}\NormalTok{ Performing Test HAVE\_GCC\_STD=C\_\_11\_\_WALL\_\_WEXTRA\_\_\_DNDEBUG}
+\ExtensionTok{{-}{-}}\NormalTok{ Performing Test HAVE\_GCC\_STD=C\_\_11\_\_WALL\_\_WEXTRA\_\_\_DNDEBUG }\AttributeTok{{-}}\NormalTok{ Success}
+\ExtensionTok{CMake}\NormalTok{ Warning }\ErrorTok{(}\ExtensionTok{dev}\KeywordTok{)} \ExtensionTok{at}\NormalTok{ external/gtest{-}1.6.0/CMakeLists.txt:42 }\ErrorTok{(}\ExtensionTok{project}\KeywordTok{)}\BuiltInTok{:}
+  \ExtensionTok{Policy}\NormalTok{ CMP0048 is not set: project}\ErrorTok{(}\KeywordTok{)} \BuiltInTok{command}\NormalTok{ manages VERSION variables.}
+  \ExtensionTok{Run} \StringTok{"cmake {-}{-}help{-}policy CMP0048"}\NormalTok{ for policy details.  Use the cmake\_policy}
+  \BuiltInTok{command}\NormalTok{ to set the policy and suppress this warning.}
+
+  \ExtensionTok{The}\NormalTok{ following variable}\ErrorTok{(}\ExtensionTok{s}\KeywordTok{)} \ExtensionTok{would}\NormalTok{ be set to empty:}
+
+    \ExtensionTok{PROJECT\_VERSION}
+    \ExtensionTok{PROJECT\_VERSION\_MAJOR}
+    \ExtensionTok{PROJECT\_VERSION\_MINOR}
+    \ExtensionTok{PROJECT\_VERSION\_PATCH}
+\ExtensionTok{This}\NormalTok{ warning is for project developers.  Use }\AttributeTok{{-}Wno{-}dev}\NormalTok{ to suppress it.}
+
+\ExtensionTok{CMake}\NormalTok{ Warning }\ErrorTok{(}\ExtensionTok{dev}\KeywordTok{)} \ExtensionTok{at}\NormalTok{ external/libdivsufsort{-}2.0.1/CMakeLists.txt:19 }\ErrorTok{(}\ExtensionTok{project}\KeywordTok{)}\BuiltInTok{:}
+  \ExtensionTok{Policy}\NormalTok{ CMP0048 is not set: project}\ErrorTok{(}\KeywordTok{)} \BuiltInTok{command}\NormalTok{ manages VERSION variables.}
+  \ExtensionTok{Run} \StringTok{"cmake {-}{-}help{-}policy CMP0048"}\NormalTok{ for policy details.  Use the cmake\_policy}
+  \BuiltInTok{command}\NormalTok{ to set the policy and suppress this warning.}
+
+  \ExtensionTok{The}\NormalTok{ following variable}\ErrorTok{(}\ExtensionTok{s}\KeywordTok{)} \ExtensionTok{would}\NormalTok{ be set to empty:}
+
+    \ExtensionTok{PROJECT\_VERSION}
+    \ExtensionTok{PROJECT\_VERSION\_MAJOR}
+    \ExtensionTok{PROJECT\_VERSION\_MINOR}
+    \ExtensionTok{PROJECT\_VERSION\_PATCH}
+\ExtensionTok{This}\NormalTok{ warning is for project developers.  Use }\AttributeTok{{-}Wno{-}dev}\NormalTok{ to suppress it.}
+
+\ExtensionTok{{-}{-}}\NormalTok{ Configuring done}
+\ExtensionTok{{-}{-}}\NormalTok{ Generating done}
+\ExtensionTok{{-}{-}}\NormalTok{ Build files have been written to: /home/helena.despindula/sdsl{-}lite{-}2.0.3/build}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3/build$}\NormalTok{ make }\AttributeTok{{-}j}\VariableTok{$(}\FunctionTok{nproc}\VariableTok{)}
+\BuiltInTok{[}\NormalTok{  4\%] Built target }\ErrorTok{gtest}
+\BuiltInTok{[}\NormalTok{ 15\%] Built target }\ErrorTok{divsufsort64}
+\BuiltInTok{[}\NormalTok{ 27\%] Built target }\ErrorTok{divsufsort}
+\BuiltInTok{[}\NormalTok{ 95\%] Built target }\ErrorTok{sdsl}
+\ExtensionTok{[100\%]}\NormalTok{ Built target gtest\_main}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3/build$}\NormalTok{ make install}
+\BuiltInTok{[}\NormalTok{  4\%] Built target }\ErrorTok{gtest}
+\BuiltInTok{[}\NormalTok{  9\%] Built target }\ErrorTok{gtest\_main}
+\BuiltInTok{[}\NormalTok{ 20\%] Built target }\ErrorTok{divsufsort64}
+\BuiltInTok{[}\NormalTok{ 31\%] Built target }\ErrorTok{divsufsort}
+\ExtensionTok{[100\%]}\NormalTok{ Built target sdsl}
+\ExtensionTok{Install}\NormalTok{ the project...}
+\ExtensionTok{{-}{-}}\NormalTok{ Install configuration: }\StringTok{"Release"}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/divsufsort.h}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/divsufsort64.h}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libdivsufsort.a}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libdivsufsort64.a}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bit\_vector\_il.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bit\_vectors.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bits.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bp\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bp\_support\_algorithm.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bp\_support\_g.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bp\_support\_gg.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/bp\_support\_sada.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/coder.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/coder\_comma.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/coder\_elias\_delta.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/coder\_elias\_gamma.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/coder\_fibonacci.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/config.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_bwt.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_config.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_isa.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_lcp.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_lcp\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_sa.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/construct\_sa\_se.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/csa\_alphabet\_strategy.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/csa\_bitcompressed.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/csa\_sada.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/csa\_sampling\_strategy.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/csa\_wt.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/cst\_iterators.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/cst\_sada.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/cst\_sct3.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/dac\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/enc\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/fast\_cache.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/int\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/int\_vector\_buffer.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/int\_vector\_io\_wrappers.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/int\_vector\_mapper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/inv\_perm\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/io.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/iterators.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/k2\_treap.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/k2\_treap\_algorithm.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/k2\_treap\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_bitcompressed.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_byte.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_dac.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_support\_sada.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_support\_tree.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_support\_tree2.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_vlc.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/lcp\_wt.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/louds\_tree.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/memory\_management.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/nearest\_neighbour\_dictionary.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/nn\_dict\_dynamic.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/qsufsort.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/ram\_filebuf.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/ram\_fs.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rank\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rank\_support\_scan.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rank\_support\_v.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rank\_support\_v5.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rmq\_succinct\_sada.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rmq\_succinct\_sct.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rmq\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rmq\_support\_sparse\_table.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rrr\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rrr\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/rrr\_vector\_15.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sd\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sdsl\_concepts.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/select\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/select\_support\_mcl.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/select\_support\_scan.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sfstream.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sorted\_int\_stack.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sorted\_multi\_stack\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/sorted\_stack\_support.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/structure\_tree.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_array\_algorithm.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_array\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_arrays.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_tree\_algorithm.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_tree\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/suffix\_trees.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/uint128\_t.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/uint256\_t.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/uintx\_t.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/util.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/vectors.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/vlc\_vector.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wavelet\_trees.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wm\_int.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_algorithm.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_blcd.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_gmr.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_helper.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_huff.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_hutu.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_int.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_pc.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/include/sdsl/wt\_rlmn.hpp}
+\ExtensionTok{{-}{-}}\NormalTok{ Installing: /home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libsdsl.a}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3/build$}\NormalTok{ ls \textasciitilde{}/sdsl{-}lite{-}2.0.3/lib/lib}\PreprocessorTok{*}\NormalTok{.a}
+\ExtensionTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libdivsufsort64.a}\NormalTok{  /home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libdivsufsort.a  /home/helena.despindula/sdsl{-}lite{-}2.0.3/lib/libsdsl.a}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/sdsl{-}lite{-}2.0.3/build$}\NormalTok{ cd}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}$}\NormalTok{ cd LACTAS{-}HELISSON{-}01/Helena{-}stuff/fsm{-}lite/v2{-}0/}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/LACTAS{-}HELISSON{-}01/Helena{-}stuff/fsm{-}lite/v2{-}0$}\NormalTok{ ls}
+\ExtensionTok{configuration.cpp}\NormalTok{  default.h                 execussao\_padronizada\_v2\_0.sh  input\_fsm{-}lite\_OXA{-}23\_OXA{-}24\_05.txt   input\_reader.h  Makefile}
+\ExtensionTok{configuration.h}\NormalTok{    dependencies.mk           fsm{-}lite.cpp                   input\_fsm{-}lite\_OXA{-}23\_OXA{-}24\_100.txt  input\_reader.o  README.md}
+\ExtensionTok{configuration.o}\NormalTok{    execussao\_padronizada.sh  fsm{-}lite.o                     input\_reader.cpp                      LICENSE.md}
+\end{Highlighting}
+\end{Shaded}
+
+Dai foi possivel compilar corretamente
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/LACTAS{-}HELISSON{-}01/Helena{-}stuff/fsm{-}lite/v2{-}0$}\NormalTok{ make clean}
+\FunctionTok{rm} \AttributeTok{{-}f}\NormalTok{ fsm{-}lite }\PreprocessorTok{*}\NormalTok{.o }\PreprocessorTok{*}\NormalTok{\textasciitilde{}}
+\ExtensionTok{helena.despindula@BIOINFO08:\textasciitilde{}/LACTAS{-}HELISSON{-}01/Helena{-}stuff/fsm{-}lite/v2{-}0$}\NormalTok{ make depend }\KeywordTok{\&\&} \FunctionTok{make}
+\ExtensionTok{g++} \AttributeTok{{-}MM} \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/build/external/libdivsufsort{-}2.0.1/include }\AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2} \AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\PreprocessorTok{*}\NormalTok{.cpp }\OperatorTok{\textgreater{}}\NormalTok{ dependencies.mk}
+\ExtensionTok{g++}  \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/build/external/libdivsufsort{-}2.0.1/include }\AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}  \AttributeTok{{-}c} \AttributeTok{{-}o}\NormalTok{ configuration.o configuration.cpp}
+\ExtensionTok{g++}  \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/build/external/libdivsufsort{-}2.0.1/include }\AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}  \AttributeTok{{-}c} \AttributeTok{{-}o}\NormalTok{ input\_reader.o input\_reader.cpp}
+\ExtensionTok{g++}  \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/build/external/libdivsufsort{-}2.0.1/include }\AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}  \AttributeTok{{-}c} \AttributeTok{{-}o}\NormalTok{ fsm{-}lite.o fsm{-}lite.cpp}
+\ExtensionTok{g++}  \AttributeTok{{-}std}\OperatorTok{=}\NormalTok{c++11 }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/include }\AttributeTok{{-}I}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/build/external/libdivsufsort{-}2.0.1/include }\AttributeTok{{-}DNDEBUG} \AttributeTok{{-}O3} \AttributeTok{{-}msse4.2}\NormalTok{   configuration.o input\_reader.o fsm{-}lite.o }\AttributeTok{{-}L}\NormalTok{/home/helena.despindula/sdsl{-}lite{-}2.0.3/lib }\AttributeTok{{-}lsdsl} \AttributeTok{{-}ldivsufsort} \AttributeTok{{-}ldivsufsort64} \AttributeTok{{-}o}\NormalTok{ fsm{-}lite}
+
+
+
+\ExtensionTok{$}\NormalTok{ ls}
+\ExtensionTok{configuration.cpp}\NormalTok{  configuration.o  dependencies.mk           execussao\_padronizada\_v2\_0.sh  fsm{-}lite.cpp  input\_fsm{-}lite\_OXA{-}23\_OXA{-}24\_05.txt   input\_reader.cpp  input\_reader.o  Makefile}
+\ExtensionTok{configuration.h}\NormalTok{    default.h   fsm{-}lite                       fsm{-}lite.o    input\_fsm{-}lite\_OXA{-}23\_OXA{-}24\_100.txt  input\_reader.h    LICENSE.md      README.md}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Criacao de arquivo .sh para execussao padronizada
+\item
+  Criacao de controle de versao no github
+\end{itemize}
+
+Arquivo \url{v2-0/execussao_padronizada_v2_0.sh}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#!/bin/bash}
+
+\VariableTok{INPUT\_FILE}\OperatorTok{=}\NormalTok{/input\_fsm{-}lite\_OXA{-}23\_OXA{-}24\_05.txt}
+\VariableTok{TIMESTAMP}\OperatorTok{=}\VariableTok{$(}\FunctionTok{date} \StringTok{\textquotesingle{}+\%Y{-}\%m{-}\%d\_\%H{-}\%M{-}\%S\textquotesingle{}}\VariableTok{)}
+\VariableTok{LOG\_DIR}\OperatorTok{=}\StringTok{"logs/fsm{-}lite"}
+\VariableTok{TMP\_DIR}\OperatorTok{=}\StringTok{"tmp/fsm{-}lite"}
+\VariableTok{MONITOR\_LOG}\OperatorTok{=}\StringTok{"}\VariableTok{$\{LOG\_DIR\}}\StringTok{/fsm\_monitor\_log\_}\VariableTok{$\{TIMESTAMP\}}\StringTok{.txt"}
+\VariableTok{OUTPUT\_LOG}\OperatorTok{=}\StringTok{"}\VariableTok{$\{LOG\_DIR\}}\StringTok{/fsm\_output\_log\_}\VariableTok{$\{TIMESTAMP\}}\StringTok{.txt"}
+\VariableTok{TMP\_FILES}\OperatorTok{=}\StringTok{"}\VariableTok{$\{TMP\_DIR\}}\StringTok{/fsm\_tmp\_files\_}\VariableTok{$\{TIMESTAMP\}}\StringTok{"}
+\VariableTok{OUTPUT\_RES}\OperatorTok{=}\StringTok{"fsm\_results\_}\VariableTok{$\{TIMESTAMP\}}\StringTok{.txt"}
+\VariableTok{SESSION\_RUN}\OperatorTok{=}\StringTok{"fsm\_run"}
+\VariableTok{SESSION\_MONITOR}\OperatorTok{=}\StringTok{"fsm\_monitor"}
+\VariableTok{INTERVAL\_MONITOR}\OperatorTok{=}\NormalTok{30}
+
+\CommentTok{\# Criar pasta de logs, se não existir}
+\FunctionTok{mkdir} \AttributeTok{{-}p} \StringTok{"}\VariableTok{$LOG\_DIR}\StringTok{"}
+\FunctionTok{mkdir} \AttributeTok{{-}p} \StringTok{"}\VariableTok{$TMP\_DIR}\StringTok{"}
+
+\CommentTok{\# Criar log inicial de monitoramento}
+\BuiltInTok{echo} \StringTok{"Iniciando monitoramento do fsm{-}lite em }\VariableTok{$TIMESTAMP}\StringTok{..."} \OperatorTok{\textgreater{}} \StringTok{"}\VariableTok{$MONITOR\_LOG}\StringTok{"}
+\BuiltInTok{echo} \StringTok{"Iniciando execução do fsm{-}lite em }\VariableTok{$TIMESTAMP}\StringTok{..."} \OperatorTok{\textgreater{}} \StringTok{"}\VariableTok{$OUTPUT\_LOG}\StringTok{"}
+\BuiltInTok{echo} \StringTok{"Salvando saída em: }\VariableTok{$OUTPUT\_RES}\StringTok{"}
+
+\CommentTok{\# Criar sessão tmux para executar fsm{-}lite com stdout + stderr no mesmo log}
+\ExtensionTok{tmux}\NormalTok{ new{-}session }\AttributeTok{{-}d} \AttributeTok{{-}s} \StringTok{"}\VariableTok{$SESSION\_RUN}\StringTok{"} \StringTok{"bash {-}c \textquotesingle{}}
+\StringTok{  echo Iniciando fsm{-}lite...}
+\StringTok{  \{ time ./fsm{-}lite {-}l }\DataTypeTok{\textbackslash{}"}\VariableTok{$\{INPUT\_FILE\}}\DataTypeTok{\textbackslash{}"}\StringTok{ {-}s 6 {-}S 610 {-}v {-}t }\DataTypeTok{\textbackslash{}"}\VariableTok{$\{TMP\_FILES\}}\DataTypeTok{\textbackslash{}"}\StringTok{ ; \} }\DataTypeTok{\textbackslash{}}
+\StringTok{    \textgreater{} }\DataTypeTok{\textbackslash{}"}\VariableTok{$\{OUTPUT\_RES\}}\DataTypeTok{\textbackslash{}"}\StringTok{ }\DataTypeTok{\textbackslash{}}
+\StringTok{    2\textgreater{} }\DataTypeTok{\textbackslash{}"}\VariableTok{$\{OUTPUT\_LOG\}}\DataTypeTok{\textbackslash{}"}
+\StringTok{\textquotesingle{}"}
+
+\CommentTok{\# Aguardar e capturar o PID do processo}
+\FunctionTok{sleep}\NormalTok{ 3}
+\VariableTok{FSM\_PID}\OperatorTok{=}\VariableTok{$(}\ExtensionTok{pgrep} \AttributeTok{{-}f} \StringTok{"./fsm{-}lite {-}l }\VariableTok{$\{INPUT\_FILE\}}\StringTok{"}\VariableTok{)}
+
+\ControlFlowTok{if} \BuiltInTok{[} \OtherTok{{-}z} \StringTok{"}\VariableTok{$FSM\_PID}\StringTok{"} \BuiltInTok{]}\KeywordTok{;} \ControlFlowTok{then}
+  \BuiltInTok{echo} \StringTok{"Erro: não foi possível identificar o PID de fsm{-}lite."}
+  \BuiltInTok{exit}\NormalTok{ 1}
+\ControlFlowTok{fi}
+
+\CommentTok{\# Comando do monitoramento}
+\CommentTok{\# Comando do monitoramento}
+\VariableTok{MONITOR\_CMD}\OperatorTok{=}\VariableTok{$(}\FunctionTok{cat} \OperatorTok{\textless{}\textless{} \textquotesingle{}EOF\textquotesingle{}}
+\StringTok{\# Escreve cabeçalho uma vez}
+\StringTok{echo {-}e "timestamp\textbackslash{}tpid\textbackslash{}tppid\textbackslash{}tcpu\_percent\textbackslash{}tmem\_percent\textbackslash{}tvsz\_kb\textbackslash{}trss\_kb\textbackslash{}telapsed\textbackslash{}tcmd" \textgreater{} "$MONITOR\_LOG"}
+
+\StringTok{while kill {-}0 $FSM\_PID 2\textgreater{}/dev/null; do}
+\StringTok{  ts="\textbackslash{}$(date \textquotesingle{}+\%Y{-}\%m{-}\%d \%H:\%M:\%S\textquotesingle{})"}
+\StringTok{  ps {-}p \textbackslash{}$FSM\_PID {-}o pid=,ppid=,\%cpu=,\%mem=,vsz=,rss=,etime=,cmd= | while read pid ppid cpu mem vsz rss elapsed cmd; do}
+\StringTok{    echo {-}e "\textbackslash{}$ts\textbackslash{}t\textbackslash{}$pid\textbackslash{}t\textbackslash{}$ppid\textbackslash{}t\textbackslash{}$cpu\textbackslash{}t\textbackslash{}$mem\textbackslash{}t\textbackslash{}$vsz\textbackslash{}t\textbackslash{}$rss\textbackslash{}t\textbackslash{}$elapsed\textbackslash{}t\textbackslash{}$cmd"}
+\StringTok{  done \textgreater{}\textgreater{} "\textbackslash{}$MONITOR\_LOG"}
+\StringTok{  sleep \textbackslash{}$INTERVAL\_MONITOR}
+\StringTok{done}
+
+\StringTok{echo "Monitoramento encerrado em \textbackslash{}$(date)" \textgreater{}\textgreater{} "\textbackslash{}$MONITOR\_LOG"}
+\OperatorTok{EOF}
+\VariableTok{)}
+
+
+\CommentTok{\# Criar sessão de monitoramento}
+\ExtensionTok{tmux}\NormalTok{ new{-}session }\AttributeTok{{-}d} \AttributeTok{{-}s} \StringTok{"}\VariableTok{$SESSION\_MONITOR}\StringTok{"} \StringTok{"FSM\_PID=}\VariableTok{$FSM\_PID}\StringTok{ MONITOR\_LOG=}\VariableTok{$MONITOR\_LOG}\StringTok{ INTERVAL\_MONITOR=}\VariableTok{$INTERVAL\_MONITOR}\StringTok{ bash {-}c \textquotesingle{}}\VariableTok{$MONITOR\_CMD}\StringTok{\textquotesingle{}"}
+
+\CommentTok{\# Mensagem final}
+\BuiltInTok{echo} \StringTok{"Sessões tmux criadas:"}
+\BuiltInTok{echo} \StringTok{"{-} Execução:     tmux attach {-}t }\VariableTok{$SESSION\_RUN}\StringTok{"}
+\BuiltInTok{echo} \StringTok{"{-} Monitoramento: tmux attach {-}t }\VariableTok{$SESSION\_MONITOR}\StringTok{"}
+\BuiltInTok{echo} \StringTok{"Logs salvos em:"}
+\BuiltInTok{echo} \StringTok{"  {-} Monitoramento: }\VariableTok{$MONITOR\_LOG}\StringTok{"}
+\BuiltInTok{echo} \StringTok{"  {-} Saída + Erros do programa: }\VariableTok{$OUTPUT\_LOG}\StringTok{"}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{v2.1}\label{v2.1}
+
+time ./fsm-lite -l input\_fsm-lite\_OXA-23\_OXA-24\_010.txt -s 6 -S 610
+-v -t temp
+
+find
+/LACTAS-HELISSON-01/joyce.souza/Abaumannii/genomes/BVBRC/ncbi\_dataset/data
+-type f -name ``*.fna'' \textgreater{} lista\_fna.txt
+
+\end{document}

@@ -1,18 +1,41 @@
 ---
-title: "fsm-lite-report"
-output: pdf_document
-date: "2025-07-22"
+title: "Report fsm-lite"
+author: "Profa Dra Helena R. S. D'Espindula"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+    df_print: kable
+    fig_caption: true
+    keep_tex: false
+    latex_engine: pdflatex
+    extra_dependencies: ["booktabs", "xcolor"]
+    pandoc_args: ["--highlight-style=breezedark"]
+  html_document:
+    df_print: paged
+geometry: margin=1in
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+require(tidyverse)
+require(stringr)
+require(data.table)
+require("ggplot2")
+require(lubridate)
+require(knitr)
+require(kableExtra)
+require(formatR)
+require(tinytex)
+
 ```
 
 # Programa original
 
 Arquivo [original/fsm-lite.cpp](original/fsm-lite.cpp)
 
-```{cpp eval=FALSE}
+```{c, eval=FALSE, include=TRUE}
 #include "default.h"
 #include "configuration.h"
 #include "input_reader.h"
@@ -225,7 +248,7 @@ int main(int argc, char ** argv)
 Arquivo [original/Makefile](original/Makefile)
 
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 SDSL_INSTALL_PREFIX=${HOME}/software
 
 CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2
@@ -256,7 +279,7 @@ include dependencies.mk
 - Instalado sdsl-lite v2.0.3 na home e atualizado Makefile
 
 https://github.com/simongog/sdsl-lite/releases/tag/v2.0.3
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 $ cd sdsl-lite-2.0.3/
 $ ./install.sh 
 $ cd
@@ -267,7 +290,7 @@ $ cd LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0/
 Devido a um serie de erros de compilacao foi necessario fazer o seguinte
 - Modificar o makefile
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 SDSL_INSTALL_PREFIX=${HOME}/sdsl-lite-2.0.3
 DIVSUFSORT_INCLUDE=$(SDSL_INSTALL_PREFIX)/build/external/libdivsufsort-2.0.1/include
 
@@ -294,7 +317,7 @@ include dependencies.mk
 
 - Executar no terminal
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 $ cd ~/sdsl-lite-2.0.3
 $ mkdir -p build
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3$ cd build
@@ -465,7 +488,7 @@ configuration.o    execussao_padronizada.sh  fsm-lite.o                     inpu
 
 Dai foi possivel compilar corretamente
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ make clean
 rm -f fsm-lite *.o *~
 helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ make depend && make
@@ -490,7 +513,7 @@ configuration.h    default.h   fsm-lite                       fsm-lite.o    inpu
 
 Arquivo [v2-0/execussao_padronizada_v2_0.sh](v2-0/execussao_padronizada_v2_0.sh)
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, include=TRUE}
 #!/bin/bash
 
 INPUT_FILE=/input_fsm-lite_OXA-23_OXA-24_05.txt
