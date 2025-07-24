@@ -12,6 +12,9 @@ SESSION_RUN="fsm_run"
 SESSION_MONITOR="fsm_monitor"
 INTERVAL_MONITOR=30
 
+# Definir limite de memória virtual (em KB): 800 GB = 800 * 1024 * 1024
+ulimit -v 838860800
+
 mkdir -p "$LOG_DIR" "$TMP_DIR"
 
 # Contar número de genomas

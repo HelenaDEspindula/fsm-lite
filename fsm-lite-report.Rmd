@@ -15,6 +15,7 @@ output:
   html_document:
     df_print: paged
 geometry: margin=1in
+fontsize: 10pt
 ---
 
 ```{r setup, include=FALSE}
@@ -31,9 +32,20 @@ require(tinytex)
 
 ```
 
+# Considerações Gerais
+
+Os arquivos do `fsm-lite` originais podem ser encontrados no Github:
+[https://github.com/nvalimak/fsm-lite](https://github.com/nvalimak/fsm-lite)
+
+Para facilitar o entendimento apenas os arquivos originais de maior importancia foram trascritos no item a seguir.
+
+
 # Programa original
 
-Arquivo [original/fsm-lite.cpp](original/fsm-lite.cpp)
+
+## Arquivo `fsm-lite.cpp` 
+
+Arquivo: [original/fsm-lite.cpp](original/fsm-lite.cpp)
 
 ```{c, eval=FALSE, include=TRUE}
 #include "default.h"
@@ -245,8 +257,9 @@ int main(int argc, char ** argv)
 }
 ```
 
-Arquivo [original/Makefile](original/Makefile)
+## Arquivo `Makefile`
 
+Arquivo: [original/Makefile](original/Makefile)
 
 ```{bash eval=FALSE, include=TRUE}
 SDSL_INSTALL_PREFIX=${HOME}/software
@@ -272,14 +285,25 @@ include dependencies.mk
 ```
 
 
-## Versao 2.0
+# Versao 2.0
 
-- Ter lista de arquivos e permiss'ao de leitura dos mesmos
+## Objetivo dessa versão:
 
-- Instalado sdsl-lite v2.0.3 na home e atualizado Makefile
+- Funcionamento basico (copilação e funcionamento com Ns pequenos)
+- Controle de versão em Github
+- Script de excussão com monitoramento padronizado
 
-https://github.com/simongog/sdsl-lite/releases/tag/v2.0.3
-```{bash eval=FALSE, include=TRUE}
+## Pre-requisitos:
+
+- Ter listagem de genomas
+- Ter acesso e permissão de leitura dos genomas
+- Ter o `sdsl-lite v2.0.3` (versõa recomendada pelo fsm-lite original) instalado na home
+
+Fonte do `sdsl-lite v2.0.3`: 
+[https://github.com/simongog/sdsl-lite/releases/tag/v2.0.3](https://github.com/simongog/sdsl-lite/releases/tag/v2.0.3)
+
+
+```{bash eval=FALSE, include=FALSE}
 $ cd sdsl-lite-2.0.3/
 $ ./install.sh 
 $ cd
@@ -287,40 +311,15 @@ $ cd LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0/
 
 ```
 
-Devido a um serie de erros de compilacao foi necessario fazer o seguinte
-- Modificar o makefile
+Instalação do `sdsl-lite v2.0.3`: 
 
 ```{bash eval=FALSE, include=TRUE}
-SDSL_INSTALL_PREFIX=${HOME}/sdsl-lite-2.0.3
-DIVSUFSORT_INCLUDE=$(SDSL_INSTALL_PREFIX)/build/external/libdivsufsort-2.0.1/include
+helena.despindula@BIOINFO08:$ cd ~/sdsl-lite-2.0.3
 
-CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -I$(DIVSUFSORT_INCLUDE) -DNDEBUG -O3 -msse4.2
+helena.despindula@BIOINFO08:$ mkdir -p build
 
-LIBS=-lsdsl -ldivsufsort -ldivsufsort64
-OBJ = configuration.o input_reader.o fsm-lite.o
-
-fsm-lite: $(OBJ)
-	$(LINK.cpp) $^ -L$(SDSL_INSTALL_PREFIX)/lib $(LIBS) -o $@
-
-test: fsm-lite
-	./fsm-lite -l test.list -t tmp -v --debug -m 1
-
-clean:
-	$(RM) fsm-lite *.o *~
-
-depend:
-	g++ -MM -std=c++11 $(CPPFLAGS) -I$(SDSL_INSTALL_PREFIX)/include *.cpp > dependencies.mk
-
-include dependencies.mk
-```
-
-
-- Executar no terminal
-
-```{bash eval=FALSE, include=TRUE}
-$ cd ~/sdsl-lite-2.0.3
-$ mkdir -p build
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3$ cd build
+
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3/build$ cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/sdsl-lite-2.0.3
 -- Compiler is recent enough to support C++11.
 -- Performing Test HAVE_GCC_STD=C__11__WALL__WEXTRA___DNDEBUG
@@ -354,12 +353,14 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/helena.despindula/sdsl-lite-2.0.3/build
+
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3/build$ make -j$(nproc)
 [  4%] Built target gtest
 [ 15%] Built target divsufsort64
 [ 27%] Built target divsufsort
 [ 95%] Built target sdsl
 [100%] Built target gtest_main
+
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3/build$ make install
 [  4%] Built target gtest
 [  9%] Built target gtest_main
@@ -476,21 +477,64 @@ Install the project...
 -- Installing: /home/helena.despindula/sdsl-lite-2.0.3/include/sdsl/wt_pc.hpp
 -- Installing: /home/helena.despindula/sdsl-lite-2.0.3/include/sdsl/wt_rlmn.hpp
 -- Installing: /home/helena.despindula/sdsl-lite-2.0.3/lib/libsdsl.a
+
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3/build$ ls ~/sdsl-lite-2.0.3/lib/lib*.a
 /home/helena.despindula/sdsl-lite-2.0.3/lib/libdivsufsort64.a  /home/helena.despindula/sdsl-lite-2.0.3/lib/libdivsufsort.a  /home/helena.despindula/sdsl-lite-2.0.3/lib/libsdsl.a
+
 helena.despindula@BIOINFO08:~/sdsl-lite-2.0.3/build$ cd
+
 helena.despindula@BIOINFO08:~$ cd LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0/
+
 helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ ls
 configuration.cpp  default.h                 execussao_padronizada_v2_0.sh  input_fsm-lite_OXA-23_OXA-24_05.txt   input_reader.h  Makefile
 configuration.h    dependencies.mk           fsm-lite.cpp                   input_fsm-lite_OXA-23_OXA-24_100.txt  input_reader.o  README.md
 configuration.o    execussao_padronizada.sh  fsm-lite.o                     input_reader.cpp                      LICENSE.md
 ```
 
-Dai foi possivel compilar corretamente
+
+
+## Modificações:
+
+1. Criacao de controle de versao no github (`fork` do original):
+
+[https://github.com/HelenaDEspindula/fsm-lite](https://github.com/HelenaDEspindula/fsm-lite)
+
+
+2. Devido a um serie de erros de compilacao foi necessario alterar o `Makefile` para:incluir as `$(CPPFLAGS)` no comando `g++`.
+
+Ficou assim:
+
+```{bash eval=FALSE, include=TRUE}
+SDSL_INSTALL_PREFIX=${HOME}/sdsl-lite-2.0.3
+DIVSUFSORT_INCLUDE=$(SDSL_INSTALL_PREFIX)/build/external/libdivsufsort-2.0.1/include
+
+CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -I$(DIVSUFSORT_INCLUDE) -DNDEBUG -O3 -msse4.2
+
+LIBS=-lsdsl -ldivsufsort -ldivsufsort64
+OBJ = configuration.o input_reader.o fsm-lite.o
+
+fsm-lite: $(OBJ)
+	$(LINK.cpp) $^ -L$(SDSL_INSTALL_PREFIX)/lib $(LIBS) -o $@
+
+test: fsm-lite
+	./fsm-lite -l test.list -t tmp -v --debug -m 1
+
+clean:
+	$(RM) fsm-lite *.o *~
+
+depend:
+	g++ -MM -std=c++11 $(CPPFLAGS) -I$(SDSL_INSTALL_PREFIX)/include *.cpp > dependencies.mk
+
+include dependencies.mk
+```
+
+
+Execução do `make` no terminal com compilação bem sucedida:
 
 ```{bash eval=FALSE, include=TRUE}
 helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ make clean
 rm -f fsm-lite *.o *~
+
 helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ make depend && make
 g++ -MM -std=c++11 -std=c++11 -I/home/helena.despindula/sdsl-lite-2.0.3/include -I/home/helena.despindula/sdsl-lite-2.0.3/build/external/libdivsufsort-2.0.1/include -DNDEBUG -O3 -msse4.2 -I/home/helena.despindula/sdsl-lite-2.0.3/include *.cpp > dependencies.mk
 g++  -std=c++11 -I/home/helena.despindula/sdsl-lite-2.0.3/include -I/home/helena.despindula/sdsl-lite-2.0.3/build/external/libdivsufsort-2.0.1/include -DNDEBUG -O3 -msse4.2  -c -o configuration.o configuration.cpp
@@ -498,18 +542,35 @@ g++  -std=c++11 -I/home/helena.despindula/sdsl-lite-2.0.3/include -I/home/helena
 g++  -std=c++11 -I/home/helena.despindula/sdsl-lite-2.0.3/include -I/home/helena.despindula/sdsl-lite-2.0.3/build/external/libdivsufsort-2.0.1/include -DNDEBUG -O3 -msse4.2  -c -o fsm-lite.o fsm-lite.cpp
 g++  -std=c++11 -I/home/helena.despindula/sdsl-lite-2.0.3/include -I/home/helena.despindula/sdsl-lite-2.0.3/build/external/libdivsufsort-2.0.1/include -DNDEBUG -O3 -msse4.2   configuration.o input_reader.o fsm-lite.o -L/home/helena.despindula/sdsl-lite-2.0.3/lib -lsdsl -ldivsufsort -ldivsufsort64 -o fsm-lite
 
-
-
-$ ls
+helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ ls
 configuration.cpp  configuration.o  dependencies.mk           execussao_padronizada_v2_0.sh  fsm-lite.cpp  input_fsm-lite_OXA-23_OXA-24_05.txt   input_reader.cpp  input_reader.o  Makefile
 configuration.h    default.h   fsm-lite                       fsm-lite.o    input_fsm-lite_OXA-23_OXA-24_100.txt  input_reader.h    LICENSE.md      README.md
 
+```
+
+Então tentou-se uma excussão simples por linha de comando direta para teste:
+
+
+```{bash eval=FALSE, include=TRUE}
 
 ```
 
+Notou-se, no entanto que o programa não estava gerando os resultados (arquivo estava vazio). 
+Dessa forma foi necessario fazer algumas modificações nos arquivos de `.cpp`
 
-- Criacao de arquivo .sh para execussao padronizada
-- Criacao de controle de versao no github
+O arquivo `.cpp` ficou assim:
+
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+Dessa vez o resultado não estava vazio e podemos dar prosseguimento.
+
+
+3. Criação de arquivo .sh para excussão padronizada
+
+Tambem foi definido limite de uso de memoria devido ao uso compartilhado do servidor.
 
 Arquivo [v2-0/execussao_padronizada_v2_0.sh](v2-0/execussao_padronizada_v2_0.sh)
 
@@ -587,10 +648,48 @@ echo "  - Saída + Erros do programa: $OUTPUT_LOG"
 ```
 
 
+Executando o arquivo `.sh`:
+```{bash eval=FALSE, include=TRUE}
+
+```
 
 
 
-## v2.1
+Log de stdout
+Arquivo: []()
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+
+
+Log de monitoramento
+Arquivo: []()
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+
+Resultado
+Arquivo: []()
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+
+Avaliação comparativa da excussão da versão 2.0 com 10 e 20 genomas
+
+```{r eval=TRUE, echo=TRUE}
+
+
+```
+
+
+
+# Versão 2.1
 
 
 time ./fsm-lite -l input_fsm-lite_OXA-23_OXA-24_010.txt -s 6 -S 610 -v -t temp
