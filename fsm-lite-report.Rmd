@@ -774,94 +774,16 @@ sys	0m7,208s
 
 
 
-```{bash eval=FALSE, include=TRUE}
-helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ time ./fsm-lite -l input_fsm-lite_OXA-23_OXA-24_010.txt -v -t temp > resultados.txt
-Reading input files...
-Read 10 input files and 1154 sequences of total length 80325904 (includes rev.compl. sequences)
-Constructing the data structures...
-Construction complete, the main index requires 230.716 MiB plus 56.9204 MiB for labels.
-All done.
-
-real	0m58,651s
-user	0m55,264s
-sys	0m2,830s
-
-helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ ls -a -l
-total 80032
-drwxrwxr-x 2 helena.despindula helena.despindula     8192 jul 23 22:21 .
-drwxrwxr-x 7 helena.despindula helena.despindula     8192 jul 23 22:01 ..
--rw-rw-r-- 1 helena.despindula helena.despindula     4894 abr 12  2016 configuration.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula      557 jul 22 22:44 configuration.h
--rw-rw-r-- 1 helena.despindula helena.despindula    20712 jul 23 22:15 configuration.o
--rw-rw-r-- 1 helena.despindula helena.despindula      173 abr 12  2016 default.h
--rw-rw-r-- 1 helena.despindula helena.despindula     7639 jul 23 22:15 dependencies.mk
--rwxrwxr-x 1 helena.despindula helena.despindula     2714 jul 22 14:32 execussao_padronizada_v2_0_2.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     3289 jul 23 22:01 execussao_padronizada_v2_0_3.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     3294 jul 23 22:01 execussao_padronizada_v2_0_4.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     2571 jul 22 14:29 execussao_padronizada_v2_0.sh
--rwxrwxr-x 1 helena.despindula helena.despindula   778176 jul 23 22:16 fsm-lite
--rw-rw-r-- 1 helena.despindula helena.despindula     6468 jul 23 22:14 fsm-lite.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula   482424 jul 23 22:16 fsm-lite.o
--rw-rw-r-- 1 helena.despindula helena.despindula     1449 jul 22 15:39 input_fsm-lite_OXA-23_OXA-24_010.txt
--rw-rw-r-- 1 helena.despindula helena.despindula     2888 jul 22 16:03 input_fsm-lite_OXA-23_OXA-24_020.txt
--rw-rw-r-- 1 helena.despindula helena.despindula     5669 abr 12  2016 input_reader.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula     1676 jul 22 22:44 input_reader.h
--rw-rw-r-- 1 helena.despindula helena.despindula    38632 jul 23 22:15 input_reader.o
--rw-rw-r-- 1 helena.despindula helena.despindula    35141 abr 12  2016 LICENSE.md
--rw-rw-r-- 1 helena.despindula helena.despindula      613 jul 22 13:30 Makefile
--rw-rw-r-- 1 helena.despindula helena.despindula     1301 abr 12  2016 README.md
--rw-rw-r-- 1 helena.despindula helena.despindula        0 jul 23 22:20 resultados.txt
--rw-rw-r-- 1 helena.despindula helena.despindula      250 jul 23 22:20 temp.meta
--rw-rw-r-- 1 helena.despindula helena.despindula 80325904 jul 23 22:20 temp.tmp
-```
-
-```{bash eval=FALSE, include=TRUE}
-
-helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ ./fsm-lite -l input_fsm-lite_OXA-23_OXA-24_010.txt -v -t temp | gzip -c > resultados.txt.gz
-Reading input files...
-Read 10 input files and 1154 sequences of total length 80325904 (includes rev.compl. sequences)
-Constructing the data structures...
-Construction complete, the main index requires 230.716 MiB plus 56.9204 MiB for labels.
-All done.
-
-helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0$ ls -a -l
-total 80040
-drwxrwxr-x 2 helena.despindula helena.despindula     8192 jul 23 22:24 .
-drwxrwxr-x 7 helena.despindula helena.despindula     8192 jul 23 22:01 ..
--rw-rw-r-- 1 helena.despindula helena.despindula     4894 abr 12  2016 configuration.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula      557 jul 22 22:44 configuration.h
--rw-rw-r-- 1 helena.despindula helena.despindula    20712 jul 23 22:15 configuration.o
--rw-rw-r-- 1 helena.despindula helena.despindula      173 abr 12  2016 default.h
--rw-rw-r-- 1 helena.despindula helena.despindula     7639 jul 23 22:15 dependencies.mk
--rwxrwxr-x 1 helena.despindula helena.despindula     2714 jul 22 14:32 execussao_padronizada_v2_0_2.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     3289 jul 23 22:01 execussao_padronizada_v2_0_3.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     3294 jul 23 22:01 execussao_padronizada_v2_0_4.sh
--rwxrwxr-x 1 helena.despindula helena.despindula     2571 jul 22 14:29 execussao_padronizada_v2_0.sh
--rwxrwxr-x 1 helena.despindula helena.despindula   778176 jul 23 22:16 fsm-lite
--rw-rw-r-- 1 helena.despindula helena.despindula     6468 jul 23 22:14 fsm-lite.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula   482424 jul 23 22:16 fsm-lite.o
--rw-rw-r-- 1 helena.despindula helena.despindula     1449 jul 22 15:39 input_fsm-lite_OXA-23_OXA-24_010.txt
--rw-rw-r-- 1 helena.despindula helena.despindula     2888 jul 22 16:03 input_fsm-lite_OXA-23_OXA-24_020.txt
--rw-rw-r-- 1 helena.despindula helena.despindula     5669 abr 12  2016 input_reader.cpp
--rw-rw-r-- 1 helena.despindula helena.despindula     1676 jul 22 22:44 input_reader.h
--rw-rw-r-- 1 helena.despindula helena.despindula    38632 jul 23 22:15 input_reader.o
--rw-rw-r-- 1 helena.despindula helena.despindula    35141 abr 12  2016 LICENSE.md
--rw-rw-r-- 1 helena.despindula helena.despindula      613 jul 22 13:30 Makefile
--rw-rw-r-- 1 helena.despindula helena.despindula     1301 abr 12  2016 README.md
--rw-rw-r-- 1 helena.despindula helena.despindula       20 jul 23 22:25 resultados.txt.gz
--rw-rw-r-- 1 helena.despindula helena.despindula      250 jul 23 22:24 temp.meta
--rw-rw-r-- 1 helena.despindula helena.despindula 80325904 jul 23 22:24 temp.tmp
-
-```
-
-Dessa forma foi necessario fazer algumas modificações nos arquivos de `.cpp`
-
-O arquivo `.cpp` ficou assim:
 
 
-```{bash eval=FALSE, include=TRUE}
 
-```
+
+
+
+
+
+
+
 
 
 
