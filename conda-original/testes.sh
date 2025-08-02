@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Caminho para o programa a ser testado
-PROGRAMA="./fsm-lite"  # ou o nome/caminho correto
+PROGRAMA="fsm-lite"  # ou o nome/caminho correto
 
 # Arquivo com lista de genomas
 LISTA="lista.txt"
