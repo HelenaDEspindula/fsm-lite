@@ -26,6 +26,10 @@ monitorar_recursos() {
 
 # Loop sobre os valores
 for N in "${valores[@]}"; do
+
+##nome arquivos
+
+
     echo "============================="
     echo "Testando com $N amostras..."
     
@@ -49,8 +53,8 @@ for N in "${valores[@]}"; do
     monitorar_recursos "$PID_TXT" "$MONITOR_TXT"
     wait "$PID_TXT"
 
-    echo "Rodando saída ZIP para $N amostras..."
-    # Executar programa - ZIP
+    echo "Rodando saída GZ para $N amostras..."
+    # Executar programa - GZ
     (
         /usr/bin/time -v -o "$LOG_TIME_ZIP" "$PROGRAMA" -l "$INPUT_ARQ" -t "$OUTPUT_ZIP" --zip
     ) &
