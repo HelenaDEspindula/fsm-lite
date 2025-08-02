@@ -595,6 +595,181 @@ drwxrwxr-x 7 helena.despindula helena.despindula     8192 jul 23 22:01 ..
 
 
 
+3. Devido ao problema de funcionamento tentou-se a versão do conda, e essa funcionou normalmente.
+
+
+```{bash eval=FALSE, include=TRUE}
+
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ conda install conda-forge::sdsl-lite 
+/usr/local/miniconda3/lib/python3.9/site-packages/conda/base/context.py:211: FutureWarning: Adding 'defaults' to channel list implicitly is deprecated and will be removed in 25.9. 
+
+To remove this warning, please choose a default channel explicitly with conda's regular configuration system, e.g. by adding 'defaults' to the list of channels:
+
+  conda config --add channels defaults
+
+For more information see https://docs.conda.io/projects/conda/en/stable/user-guide/configuration/use-condarc.html
+
+  deprecated.topic(
+Channels:
+ - defaults
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /home/helena.despindula/.conda/envs/fsm-lite-conda
+
+  added / updated specs:
+    - conda-forge::sdsl-lite
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    libgcc-15.1.0              |       h767d61c_4         805 KB  conda-forge
+    libgcc-ng-15.1.0           |       h69a702a_4          29 KB  conda-forge
+    libgomp-15.1.0             |       h767d61c_4         437 KB  conda-forge
+    libstdcxx-15.1.0           |       h8f9b012_4         3.7 MB  conda-forge
+    libstdcxx-ng-15.1.0        |       h4852527_4          29 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:         5.0 MB
+
+The following NEW packages will be INSTALLED:
+
+  _libgcc_mutex      pkgs/main/linux-64::_libgcc_mutex-0.1-main 
+  _openmp_mutex      pkgs/main/linux-64::_openmp_mutex-5.1-1_gnu 
+  libgcc             conda-forge/linux-64::libgcc-15.1.0-h767d61c_4 
+  libgcc-ng          conda-forge/linux-64::libgcc-ng-15.1.0-h69a702a_4 
+  libgomp            conda-forge/linux-64::libgomp-15.1.0-h767d61c_4 
+  libstdcxx          conda-forge/linux-64::libstdcxx-15.1.0-h8f9b012_4 
+  libstdcxx-ng       conda-forge/linux-64::libstdcxx-ng-15.1.0-h4852527_4 
+  sdsl-lite          conda-forge/linux-64::sdsl-lite-2.1.1-h00ab1b0_1002 
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages:
+                                                                                                                                                                                                 
+Preparing transaction: done                                                                                                                                                                      
+Verifying transaction: done                                                                                                                                                                      
+Executing transaction: done                       
+
+
+
+
+
+
+                                                                                                                                               
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ conda install bioconda::fsm-lite                                                                                                             
+/usr/local/miniconda3/lib/python3.9/site-packages/conda/base/context.py:211: FutureWarning: Adding 'defaults' to channel list implicitly is deprecated and will be removed in 25.9. 
+
+To remove this warning, please choose a default channel explicitly with conda's regular configuration system, e.g. by adding 'defaults' to the list of channels:
+
+  conda config --add channels defaults
+
+For more information see https://docs.conda.io/projects/conda/en/stable/user-guide/configuration/use-condarc.html
+
+  deprecated.topic(
+Channels:
+ - defaults
+ - bioconda
+Platform: linux-64
+Collecting package metadata (repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /home/helena.despindula/.conda/envs/fsm-lite-conda
+
+  added / updated specs:
+    - bioconda::fsm-lite
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    fsm-lite-1.0               |       h9948957_6         251 KB  bioconda
+    ------------------------------------------------------------
+                                           Total:         251 KB
+
+The following NEW packages will be INSTALLED:
+
+  fsm-lite           bioconda/linux-64::fsm-lite-1.0-h9948957_6 
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages:
+                                                                                                                                                                                                 
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ fsm-li
+fsm-li: command not found
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ fsm-lite
+
+
+
+
+
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ conda list --explicit
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+# created-by: conda 25.5.1
+@EXPLICIT
+https://repo.anaconda.com/pkgs/main/linux-64/_libgcc_mutex-0.1-main.conda
+https://conda.anaconda.org/conda-forge/linux-64/libgomp-15.1.0-h767d61c_4.conda
+https://repo.anaconda.com/pkgs/main/linux-64/_openmp_mutex-5.1-1_gnu.conda
+https://conda.anaconda.org/conda-forge/linux-64/libgcc-15.1.0-h767d61c_4.conda
+https://conda.anaconda.org/conda-forge/linux-64/libgcc-ng-15.1.0-h69a702a_4.conda
+https://conda.anaconda.org/conda-forge/linux-64/libstdcxx-15.1.0-h8f9b012_4.conda
+https://conda.anaconda.org/conda-forge/linux-64/libstdcxx-ng-15.1.0-h4852527_4.conda
+https://conda.anaconda.org/conda-forge/linux-64/sdsl-lite-2.1.1-h00ab1b0_1002.conda
+https://conda.anaconda.org/bioconda/linux-64/fsm-lite-1.0-h9948957_6.tar.bz2
+
+
+```
+
+
+
+```{bash eval=FALSE, include=TRUE}
+
+(fsm-lite-conda) helena.despindula@BIOINFO08:~$ time fsm-lite -v --debug -m 2 -l LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2-0/input_fsm-lite_OXA-23_OXA-24_010.txt -t Desktop/temp > rest.txt
+Reading input files...
+Read 10 input files and 1154 sequences of total length 80325904 (includes rev.compl. sequences)
+Constructing the data structures...
+bwt end marker pos = 50209239
+wt size = 80325905, n = 80325905
+Construction complete, the main index requires 230.716 MiB plus 56.9204 MiB for labels.
+All done.
+
+real	6m56,624s
+user	6m48,520s
+sys	0m7,208s
+
+```
+
+
+
+
+```{bash eval=FALSE, include=TRUE}
+
+
+```
+
+
+
+
+
+
+
 
 
 
