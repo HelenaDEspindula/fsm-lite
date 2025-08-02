@@ -21,6 +21,11 @@ LISTA="lista.txt"
 # Diretório para logs e saídas
 mkdir -p logs saidas inputs monitoramento
 
+## fazer sessão tmux
+
+## imprimir conf conda
+
+
 # Valores de amostras a testar
 valores=(1 5 10 25 50 100 150 200 250)
 
