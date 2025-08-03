@@ -1,0 +1,17 @@
+{
+  "arch": "x86_64",
+  "build": "h9948957_6",
+  "build_number": 6,
+  "depends": [
+    "libgcc >=13",
+    "libstdcxx >=13",
+    "sdsl-lite"
+  ],
+  "license": "GPL-3",
+  "license_family": "GPL",
+  "name": "fsm-lite",
+  "platform": "linux",
+  "subdir": "linux-64",
+  "timestamp": 1734152822980,
+  "version": "1.0"
+}

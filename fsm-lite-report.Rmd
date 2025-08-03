@@ -757,13 +757,100 @@ sys	0m7,208s
 ```
 
 
+Como parece ser um problema de compatibilidade de biblioteca usamos o ambiente conda para tentar compilar o original novamente
 
+Makefile
 
 ```{bash eval=FALSE, include=TRUE}
+SDSL_INSTALL_PREFIX=/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002
+
+CPPFLAGS=-std=c++11 -I$(SDSL_INSTALL_PREFIX)/include -DNDEBUG -O3 -msse4.2
+LIBS=-lsdsl -ldivsufsort -ldivsufsort64
+OBJ = configuration.o input_reader.o fsm-lite.o
+
+fsm-lite: $(OBJ)
+	$(LINK.cpp) $^ -L$(SDSL_INSTALL_PREFIX)/lib $(LIBS) -o $@
+
+test: fsm-lite
+	./fsm-lite -l test.list -t tmp -v --debug -m 1
+
+clean:
+	$(RM) fsm-lite *.o *~
+
+depend:
+	g++ -MM -std=c++11 -I$(SDSL_INSTALL_PREFIX)/include *.cpp > dependencies.mk
+
+include dependencies.mk
 
 
 ```
 
+
+Teste
+
+
+```{bash eval=FALSE, include=TRUE}
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/original$ make clean
+rm -f fsm-lite *.o *~
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/original$ make depend
+g++ -MM -std=c++11 -I/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/include *.cpp > dependencies.mk
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/original$ make
+g++  -std=c++11 -I/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/include -DNDEBUG -O3 -msse4.2  -c -o configuration.o configuration.cpp
+g++  -std=c++11 -I/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/include -DNDEBUG -O3 -msse4.2  -c -o input_reader.o input_reader.cpp
+g++  -std=c++11 -I/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/include -DNDEBUG -O3 -msse4.2  -c -o fsm-lite.o fsm-lite.cpp
+g++  -std=c++11 -I/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/include -DNDEBUG -O3 -msse4.2   configuration.o input_reader.o fsm-lite.o -L/home/helena.despindula/.conda/pkgs/sdsl-lite-2.1.1-h00ab1b0_1002/lib -lsdsl -ldivsufsort -ldivsufsort64 -o fsm-lite
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/original$ ./fsm-lite -v --debug -l ../v2-0/input_fsm-lite_OXA-23_OXA-24_010.txt -S 50 -m 2 -t temp > rescultados_conda.txt
+Reading input files...
+Read 10 input files and 1154 sequences of total length 80325904 (includes rev.compl. sequences)
+Constructing the data structures...
+bwt end marker pos = 50209239
+wt size = 80325905, n = 80325905
+Construction complete, the main index requires 230.716 MiB plus 56.9204 MiB for labels.
+All done.
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/original$ ls -lh
+total 2,0G
+-rw-rw-r-- 1 helena.despindula helena.despindula 4,8K abr 12  2016 configuration.cpp
+-rw-rw-r-- 1 helena.despindula helena.despindula  557 abr 12  2016 configuration.h
+-rw-rw-r-- 1 helena.despindula helena.despindula  21K ago  2 10:09 configuration.o
+-rw-rw-r-- 1 helena.despindula helena.despindula  173 abr 12  2016 default.h
+-rw-rw-r-- 1 helena.despindula helena.despindula  11K ago  2 10:09 dependencies.mk
+-rwxrwxr-x 1 helena.despindula helena.despindula 801K ago  2 10:10 fsm-lite
+-rw-rw-r-- 1 helena.despindula helena.despindula 6,9K jul 23 22:01 fsm-lite.cpp
+-rw-rw-r-- 1 helena.despindula helena.despindula 479K ago  2 10:10 fsm-lite.o
+-rw-rw-r-- 1 helena.despindula helena.despindula 5,6K abr 12  2016 input_reader.cpp
+-rw-rw-r-- 1 helena.despindula helena.despindula 1,7K abr 12  2016 input_reader.h
+-rw-rw-r-- 1 helena.despindula helena.despindula  38K ago  2 10:09 input_reader.o
+-rw-rw-r-- 1 helena.despindula helena.despindula  35K abr 12  2016 LICENSE.md
+-rw-rw-r-- 1 helena.despindula helena.despindula  533 ago  2 10:09 Makefile
+-rw-rw-r-- 1 helena.despindula helena.despindula  484 abr 12  2016 Makefile-original
+-rw-rw-r-- 1 helena.despindula helena.despindula 1,3K abr 12  2016 README.md
+-rw-rw-r-- 1 helena.despindula helena.despindula 1,9G ago  2 10:19 rescultados_conda.txt
+-rw-rw-r-- 1 helena.despindula helena.despindula  250 ago  2 10:13 temp.meta
+-rw-rw-r-- 1 helena.despindula helena.despindula  77M ago  2 10:13 temp.tmp
+
+```
+
+
+
+
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+
+
+
+```{bash eval=FALSE, include=TRUE}
+
+```
+
+
+
+
+```{bash eval=FALSE, include=TRUE}
+
+```
 
 
 

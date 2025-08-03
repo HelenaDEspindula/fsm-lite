@@ -1,0 +1,71 @@
+# This file created by conda-build 24.7.1
+# meta.yaml template originally from:
+# /opt/recipe, last modified Sat Dec 14 02:25:02 2024
+# ------------------------------------------------
+
+package:
+  name: fsm-lite
+  version: '1.0'
+source:
+  patches:
+    - 0001-Increase-DBITS.patch
+    - 0002-CXX-in-Makefile.patch
+  sha256: f781a9fbab5265bd09b3b5b7e1cba904582ec201c3d30baed36e28a03de3ac61
+  url: https://github.com/nvalimak/fsm-lite/archive/v1.0-stable.tar.gz
+build:
+  number: '6'
+  string: h9948957_6
+requirements:
+  build:
+    - _libgcc_mutex 0.1 conda_forge
+    - _openmp_mutex 4.5 2_gnu
+    - binutils_impl_linux-64 2.43 h4bf12b8_2
+    - binutils_linux-64 2.43 h4852527_2
+    - gcc_impl_linux-64 13.3.0 hfea6d02_1
+    - gcc_linux-64 13.3.0 hc28eda2_7
+    - gxx_impl_linux-64 13.3.0 hdbfa832_1
+    - gxx_linux-64 13.3.0 h6834431_7
+    - kernel-headers_linux-64 3.10.0 he073ed8_18
+    - ld_impl_linux-64 2.43 h712a8e2_2
+    - libgcc 14.2.0 h77fa898_1
+    - libgcc-devel_linux-64 13.3.0 h84ea5a7_101
+    - libgomp 14.2.0 h77fa898_1
+    - libsanitizer 13.3.0 heb74ff8_1
+    - libstdcxx 14.2.0 hc0a3c3a_1
+    - libstdcxx-devel_linux-64 13.3.0 h84ea5a7_101
+    - make 4.4.1 hb9d3cd8_2
+    - sysroot_linux-64 2.17 h4a8ded7_18
+    - tzdata 2024b hc8b5060_0
+  host:
+    - _libgcc_mutex 0.1 conda_forge
+    - _openmp_mutex 4.5 2_gnu
+    - libgcc 14.2.0 h77fa898_1
+    - libgcc-ng 14.2.0 h69a702a_1
+    - libgomp 14.2.0 h77fa898_1
+    - libstdcxx 14.2.0 hc0a3c3a_1
+    - libstdcxx-ng 14.2.0 h4852527_1
+    - sdsl-lite 2.1.1 h00ab1b0_1002
+  run:
+    - libgcc >=13
+    - libstdcxx >=13
+    - sdsl-lite
+test:
+  commands:
+    - fsm-lite -h 2>&1 | grep whitespace-separated
+about:
+  description: 'A single-core implemetation of frequency-based substring mining. Used
+    to
+
+    count k-mers in populations of genomes (supplied as fasta files).
+
+    '
+  home: https://github.com/nvalimak/fsm-lite
+  license: GPL-3
+  license_family: GPL
+  license_file: LICENSE.md
+  summary: Frequency-based String Mining (lite)
+extra:
+  copy_test_source_files: true
+  final: true
+  identifiers:
+    - doi:10.1038/ncomms12797

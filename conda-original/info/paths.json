@@ -1,0 +1,11 @@
+{
+  "paths": [
+    {
+      "_path": "bin/fsm-lite",
+      "path_type": "hardlink",
+      "sha256": "3e1572b6a007e13bd87d7b0b70db777382ba7e8b16ef50bd15dbb15eba215d51",
+      "size_in_bytes": 584720
+    }
+  ],
+  "paths_version": 1
+}
