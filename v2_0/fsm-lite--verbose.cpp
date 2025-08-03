@@ -1,5 +1,3 @@
-/* --- Includes and Namespace --- */
-
 #include "default.h"
 #include "configuration.h"
 #include "input_reader.h"
@@ -10,8 +8,6 @@
 #include <cstdlib> // std::exit()
 
 using namespace std;
-
-/* --- Type Definitions --- */
 
 typedef sdsl::cst_sct3<> cst_t;
 typedef sdsl::wt_int<> wt_t;
@@ -27,8 +23,6 @@ typedef wt_t::size_type size_type;
  * The value of DBITS has to be set at compile time (in defaults.h).
  * Large DBITS values result in large memory requirements for wt_init().
  */
-
-/* --- Wavelet tree function --- */
 
 void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configuration &config)
 {
@@ -80,8 +74,6 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
   
 }
 
-/* --- Main function --- */
-
 int main(int argc, char ** argv)
 {
   configuration config(argc, argv);
@@ -124,16 +116,8 @@ int main(int argc, char ** argv)
     cerr << "[VERBOSE] Construction complete, the main index requires " << size_in_mega_bytes(cst) << " MiB plus " << size_in_mega_bytes(label_wt) << " MiB for labels." << endl;
   
   /**
-   * Main Processing Loop
-   * Steps:
-   * 1. Node processing (depth-first traversal)
-   * 2. Length filtering (`minlength`/`maxlength`)
-   * 3. Weiner link checks
-   * 4. Support calculation
-   * 5. Frequency filtering
-   * 6. Pattern output
+   * Main loop
    */
-  
   node_type root = cst.root();
   vector<node_type> buffer;
   buffer.reserve(1024*1024);

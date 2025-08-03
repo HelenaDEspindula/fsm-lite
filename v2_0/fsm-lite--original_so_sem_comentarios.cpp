@@ -1,5 +1,3 @@
-/* --- Includes and Namespace --- */
-
 #include "default.h"
 #include "configuration.h"
 #include "input_reader.h"
@@ -10,8 +8,6 @@
 #include <cstdlib> // std::exit()
 
 using namespace std;
-
-/* --- Type Definitions --- */
 
 typedef sdsl::cst_sct3<> cst_t;
 typedef sdsl::wt_int<> wt_t;
@@ -27,9 +23,6 @@ typedef wt_t::size_type size_type;
  * The value of DBITS has to be set at compile time (in defaults.h).
  * Large DBITS values result in large memory requirements for wt_init().
  */
-
-/* --- Wavelet tree function --- */
-
 void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configuration &config)
 {
   uint64_t n = cst.csa.size();
@@ -38,7 +31,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
   uint64_t k = ir->size()-1;
   uint64_t j = cst.csa.wavelet_tree.select(1, 0);
   if (config.debug)
-    cerr << "[DEBUG] bwt end marker pos = " << j << endl;
+    cerr << "bwt end marker pos = " << j << endl;
   uint64_t bwtendpos = j;
   j = cst.csa.lf[j];
   labels[j] = 0;  // Label of last byte
@@ -58,7 +51,7 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
   labels[j] = k;
   if (j != bwtendpos || k != 0) // Assert
   {
-    cerr << "[ERROR] Labeling failed, j = " << j << ", k = " << k << endl;
+    cerr << "Labeling failed, j = " << j << ", k = " << k << endl;
     exit(1);
   }
   
@@ -68,19 +61,17 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
   sdsl::int_vector_buffer<DBITS> text_buf(tmp_file);
   wt = wt_t(text_buf, labels.size());
   if (config.debug)
-    cerr << "[DEBUG] wt size = " << wt.size() << ", n = " << n << endl;
+    cerr << "wt size = " << wt.size() << ", n = " << n << endl;
   j = 0;
   for (uint64_t i = 0; i < ir->size(); ++i)
     j += wt.rank(n, i);
   if (j != n) // Assert
   {
-    cerr << "[ERROR] Label sum failed, j = " << j << ", n = " << n << endl;
+    cerr << "Label sum failed, j = " << j << ", n = " << n << endl;
     exit(1);
   }
   
 }
-
-/* --- Main function --- */
 
 int main(int argc, char ** argv)
 {
@@ -89,21 +80,21 @@ int main(int argc, char ** argv)
     config.print_short_usage();
   
   if (config.verbose)
-    cerr << "[VERBOSE] Reading input files..." << endl;
+    cerr << "Reading input files..." << endl;
   input_reader *ir = input_reader::build(config);
   if (config.verbose)
-    cerr << "[VERBOSE] Read " << ir->size() << " input files and " << ir->total_seqs() << " sequences of total length " << ir->total_size() << " (includes rev.compl. sequences)" << endl;
+    cerr << "Read " << ir->size() << " input files and " << ir->total_seqs() << " sequences of total length " << ir->total_size() << " (includes rev.compl. sequences)" << endl;
   
   /**
    * Initialize the data structures
    */
   if (config.verbose)
-    cerr << "[VERBOSE] Constructing the data structures..." << endl;
+    cerr << "Constructing the data structures..." << endl;
   cst_t cst;    
   construct(cst, config.tmpfile + ".tmp", 1);
   if (!cst.csa.size())
   {
-    cerr << "[ERROR] Unable to construct the data structure; Out of memory?" << endl; 
+    cerr << "error: unable to construct the data structure; out of memory?" << endl; 
     abort();
   }
   
@@ -121,19 +112,11 @@ int main(int argc, char ** argv)
   vector<size_type> rank_ep(ir->size(), 0);
   
   if (config.verbose)
-    cerr << "[VERBOSE] Construction complete, the main index requires " << size_in_mega_bytes(cst) << " MiB plus " << size_in_mega_bytes(label_wt) << " MiB for labels." << endl;
+    cerr << "Construction complete, the main index requires " << size_in_mega_bytes(cst) << " MiB plus " << size_in_mega_bytes(label_wt) << " MiB for labels." << endl;
   
   /**
-   * Main Processing Loop
-   * Steps:
-   * 1. Node processing (depth-first traversal)
-   * 2. Length filtering (`minlength`/`maxlength`)
-   * 3. Weiner link checks
-   * 4. Support calculation
-   * 5. Frequency filtering
-   * 6. Pattern output
+   * Main loop
    */
-  
   node_type root = cst.root();
   vector<node_type> buffer;
   buffer.reserve(1024*1024);
@@ -159,7 +142,7 @@ int main(int argc, char ** argv)
     
     if (wn == root && config.debug)
     {
-      cerr << "[Warning] No Weiner-link at " << depth << "-[" << sp << "," << ep << "]" << endl;
+      cerr << "warning: no Weiner-link at " << depth << "-[" << sp << "," << ep << "]" << endl;
       continue;
     }
     if (depth < config.maxlength && cst.rb(wn)-cst.lb(wn) == ep-sp)
@@ -193,7 +176,7 @@ int main(int argc, char ** argv)
   }
   
   if (config.verbose)
-    cerr << "[VERBOSE] All done." << endl;    
+    cerr << "All done." << endl;    
   delete ir; ir = 0;
   return 0;
 }
