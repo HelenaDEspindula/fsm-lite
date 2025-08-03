@@ -1,0 +1,6 @@
+Reading input files...
+Read 50 input files and 15040 sequences of total length 404161128 (includes rev.compl. sequences)
+Constructing the data structures...
+bwt end marker pos = 252867029
+wt size = 404161129, n = 404161129
+Construction complete, the main index requires 1243.29 MiB plus 429.607 MiB for labels.

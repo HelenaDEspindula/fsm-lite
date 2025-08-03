@@ -1038,7 +1038,7 @@ log_files <- list.files(log_dir, pattern = "fsm_output_log_.*\\.txt$", full.name
 print("Foram encontrados os arquivos")
 print(log_files)
 
-# Função auxiliar
+# Função auxiliar para converter h:mm:ss ou m:ss para segundos
 tempo_para_segundos <- function(t) {
   if (grepl(":", t)) {
     partes <- as.numeric(unlist(strsplit(t, ":")))
@@ -1048,7 +1048,7 @@ tempo_para_segundos <- function(t) {
   return(as.numeric(t))
 }
 
-# Função principal para extrair as informações
+# Função principal
 extrair_dados_log <- function(arquivo) {
   linhas <- readLines(arquivo)
 
@@ -1062,17 +1062,17 @@ extrair_dados_log <- function(arquivo) {
   }
 
   # Número de genomas
-  genomas <- as.numeric(str_extract(get_valor("Read [0-9]+ input files"), "[0-9]+"))
+  genomas <- as.numeric(str_match(get_valor("Read [0-9]+ input files"), "Read ([0-9]+) input files")[,2])
 
   # Linha do comando executado
-  comand <- get_valor("Command being timed")
+  comando <- get_valor("Command being timed")
 
-  # Tipo de saída
-  tipo_saida <- ifelse(grepl("\\.gz", comand), "GZ", "TXT")
+  # Parâmetros -S e -m corrigidos (espaço ou igual)
+  param_S <- as.numeric(str_match(comando, "-S\\s+([0-9]+)")[,2])
 
-  # Parâmetros -S e -m
-  S_val <- as.numeric(str_match(comand, "-S\\s+(\\d+)")[,2])
-  m_val <- as.numeric(str_match(comand, "-m\\s+(\\d+)")[,2])
+
+  # Tipo de saída: inferido por presença de "--zip" no comando
+  tipo_saida <- ifelse(grepl("--zip", comando), "GZ", "TXT")
 
   # Tempos
   elapsed <- tempo_para_segundos(get_valor("Elapsed (wall clock) time"))
@@ -1086,11 +1086,9 @@ extrair_dados_log <- function(arquivo) {
 
   data.frame(
     arquivo = basename(arquivo),
-    comand_used = comand,
     genomas = genomas,
     tipo_saida = tipo_saida,
-    param_S = S_val,
-    param_m = m_val,
+    param_S = param_S,
     elapsed_sec = elapsed,
     user_time = user,
     system_time = system,
@@ -1099,30 +1097,30 @@ extrair_dados_log <- function(arquivo) {
   )
 }
 
-# Processar todos os arquivos
+# Aplicar a função a todos os arquivos
 tabela_logs <- do.call(rbind, lapply(log_files, extrair_dados_log))
 
-# Visualizar tabela
+# Visualizar
 print(tabela_logs)
 view(tabela_logs)
 
-write.csv(tabela_logs, "original/logs/resumo_fsm_execucoes.csv", row.names = FALSE)
+write.csv(tabela_logs, "original/logs/resumo_fsm_execucoes_completo.csv", row.names = FALSE)
+
 
 ```
 
 
 ```{r eval=TRUE, cache=TRUE}
-# Exemplo de gráfico: Tempo de execução por número de genomas, separado por tipo de saída
-ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = tipo_saida)) +
+# Gráfico: tempo de execução
+ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = interaction(param_S, param_m))) +
   geom_line() + geom_point(size = 3) +
-  facet_grid(param_S ~ param_m, labeller = label_both) +
-  labs(title = "Tempo de execução vs Número de Genomas", x = "Genomas", y = "Tempo (s)")
+  labs(title = "Tempo de execução vs Número de Genomas", x = "Genomas", y = "Tempo (s)", color = "S_m")
 
-# Memória
-ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = tipo_saida)) +
+# Gráfico: uso de memória
+ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = interaction(param_S, param_m))) +
   geom_line() + geom_point(size = 3) +
-  facet_grid(param_S ~ param_m, labeller = label_both) +
-  labs(title = "Uso máximo de memória vs Genomas", x = "Genomas", y = "Memória (MB)")
+  labs(title = "Uso máximo de memória vs Número de Genomas", x = "Genomas", y = "Memória (MB)", color = "S_m")
+
 
 ```
 
