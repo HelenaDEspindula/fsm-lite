@@ -38,6 +38,7 @@ for N in "${GENOMAS[@]}"; do
     
   
     echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$MONITOR_LOG"
+    echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_LOG"
     echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
     
     echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_RES"
@@ -71,6 +72,7 @@ for N in "${GENOMAS[@]}"; do
     
   
     echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$MONITOR_LOG"
+    echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_LOG"
     echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
     
     echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_RES"

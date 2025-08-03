@@ -834,12 +834,6 @@ total 2,0G
 
 
 
-```{bash eval=FALSE, include=TRUE}
-
-```
-
-
-
 
 ```{bash eval=FALSE, include=TRUE}
 
@@ -888,75 +882,251 @@ Arquivo [v2-0/execussao_padronizada_v2_0.sh](v2-0/execussao_padronizada_v2_0.sh)
 ```{bash eval=FALSE, include=TRUE}
 #!/bin/bash
 
-INPUT_FILE=/input_fsm-lite_OXA-23_OXA-24_05.txt
-TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
-LOG_DIR="logs/fsm-lite"
-TMP_DIR="tmp/fsm-lite"
-MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.txt"
-OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
-TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
-OUTPUT_RES="fsm_results_${TIMESTAMP}.txt"
-SESSION_RUN="fsm_run"
-SESSION_MONITOR="fsm_monitor"
+INPUT_FILE="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt"
+LISTA="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_100.txt"
+LOG_DIR="logs"
 INTERVAL_MONITOR=30
+GENOMAS=(5 10 25 50 100)
+SMINUSCULO=6
+SMAIUSCULO=(10 50 200 600)
+MMINUSCULO=1
+TMP_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp"
+RES_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results"
 
-# Criar pasta de logs, se não existir
+
+PROGRAMA="./fsm-lite"
+
+# Criar pastas
 mkdir -p "$LOG_DIR"
 mkdir -p "$TMP_DIR"
+mkdir -p "$RES_DIR"
 
-# Criar log inicial de monitoramento
-echo "Iniciando monitoramento do fsm-lite em $TIMESTAMP..." > "$MONITOR_LOG"
-echo "Iniciando execução do fsm-lite em $TIMESTAMP..." > "$OUTPUT_LOG"
-echo "Salvando saída em: $OUTPUT_RES"
+for N in "${GENOMAS[@]}"; do
 
-# Criar sessão tmux para executar fsm-lite com stdout + stderr no mesmo log
-tmux new-session -d -s "$SESSION_RUN" "bash -c '
-  echo Iniciando fsm-lite...
-  { time ./fsm-lite -l \"${INPUT_FILE}\" -s 6 -S 610 -v -t \"${TMP_FILES}\" ; } \
-    > \"${OUTPUT_RES}\" \
-    2> \"${OUTPUT_LOG}\"
-'"
+  # Criar sublista
+  head -n "$N" "$LISTA" > "$INPUT_FILE"
 
-# Aguardar e capturar o PID do processo
-sleep 3
-FSM_PID=$(pgrep -f "./fsm-lite -l ${INPUT_FILE}")
+  for J in "${SMAIUSCULO[@]}"; do
+  
+    echo "============================="
+    echo "Testando com TXT: $N amostras com $J de maximo as ${TIMESTAMP}"
+  
+    TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+    MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.tsv"
+    OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_${TIMESTAMP}.txt"
+  
+    
+  
+    echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$MONITOR_LOG"
+    echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_LOG"
+    echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
+    
+    echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_RES"
+  
+    echo "Rodando fsm-lite TXT: para $N amostras com $J de maximo as ${TIMESTAMP}."
+    
+    # Executar fsm-lite em background
+    ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO --debug -v -t "$TMP_FILES" >> "$OUTPUT_RES" 2> "$OUTPUT_LOG" ) &
+    FSM_PID=$!
+  
+    echo "Monitorando PID: $FSM_PID"
+  
+      # Monitorar enquanto o processo estiver rodando
+      while kill -0 "$FSM_PID" 2>/dev/null; do
+        timestamp=$(date +%s)
+        ps -p "$FSM_PID" -o %cpu,%mem,vsz,rss --no-headers | \
+          awk -v t="$timestamp" '{print t"\t"$1"\t"$2"\t"$3"\t"$4}' >> "$MONITOR_LOG"
+        pidstat -h -r -u -p $FSM_PID 1 1 | awk -v t="$timestamp" 'NR==4 {print t"\t"$8"\t"$9"\t"$10"\t"$11}' >> "$MONITOR_LOG"
+        sleep "$INTERVAL_MONITOR"
+      done
+    
+    echo "============================="
+    echo "Testando com GZ: $N amostras com $J de maximo as ${TIMESTAMP}"
+  
+    TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+    MONITOR_LOG="${LOG_DIR}/fsm_monitor_log_${TIMESTAMP}.tsv"
+    OUTPUT_LOG="${LOG_DIR}/fsm_output_log_${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_${TIMESTAMP}.txt.gz"
+  
+    
+  
+    echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$MONITOR_LOG"
+    echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_LOG"
+    echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
+    
+    echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_RES"
+  
+    echo "Rodando fsm-lite GZ: para $N amostras com $J de maximo as ${TIMESTAMP}."
+    
+    # Executar fsm-lite em background
+    ( ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO --debug -v -t "$TMP_FILES" | gzip >> "$OUTPUT_RES" ) 2> "$OUTPUT_LOG" ) &
+    FSM_PID=$!
+  
+    echo "Monitorando PID: $FSM_PID"
+  
+      # Monitorar enquanto o processo estiver rodando
+      while kill -0 "$FSM_PID" 2>/dev/null; do
+        timestamp=$(date +%s)
+        ps -p "$FSM_PID" -o %cpu,%mem,vsz,rss --no-headers | \
+          awk -v t="$timestamp" '{print t"\t"$1"\t"$2"\t"$3"\t"$4}' >> "$MONITOR_LOG"
+        pidstat -h -r -u -p $FSM_PID 1 1 | awk -v t="$timestamp" 'NR==4 {print t"\t"$8"\t"$9"\t"$10"\t"$11}' >> "$MONITOR_LOG"
+        sleep "$INTERVAL_MONITOR"
+      done
+    
+  done
 
-if [ -z "$FSM_PID" ]; then
-  echo "Erro: não foi possível identificar o PID de fsm-lite."
-  exit 1
-fi
-
-# Comando do monitoramento
-# Comando do monitoramento
-MONITOR_CMD=$(cat << 'EOF'
-# Escreve cabeçalho uma vez
-echo -e "timestamp\tpid\tppid\tcpu_percent\tmem_percent\tvsz_kb\trss_kb\telapsed\tcmd" > "$MONITOR_LOG"
-
-while kill -0 $FSM_PID 2>/dev/null; do
-  ts="\$(date '+%Y-%m-%d %H:%M:%S')"
-  ps -p \$FSM_PID -o pid=,ppid=,%cpu=,%mem=,vsz=,rss=,etime=,cmd= | while read pid ppid cpu mem vsz rss elapsed cmd; do
-    echo -e "\$ts\t\$pid\t\$ppid\t\$cpu\t\$mem\t\$vsz\t\$rss\t\$elapsed\t\$cmd"
-  done >> "\$MONITOR_LOG"
-  sleep \$INTERVAL_MONITOR
+  wait "$FSM_PID"
+  echo "Finalizado testes com $N amostras com $J de maximo as ${TIMESTAMP}."
 done
 
-echo "Monitoramento encerrado em \$(date)" >> "\$MONITOR_LOG"
-EOF
-)
+echo "Todos os testes foram concluídos."
 
-
-# Criar sessão de monitoramento
-tmux new-session -d -s "$SESSION_MONITOR" "FSM_PID=$FSM_PID MONITOR_LOG=$MONITOR_LOG INTERVAL_MONITOR=$INTERVAL_MONITOR bash -c '$MONITOR_CMD'"
-
-# Mensagem final
-echo "Sessões tmux criadas:"
-echo "- Execução:     tmux attach -t $SESSION_RUN"
-echo "- Monitoramento: tmux attach -t $SESSION_MONITOR"
-echo "Logs salvos em:"
-echo "  - Monitoramento: $MONITOR_LOG"
-echo "  - Saída + Erros do programa: $OUTPUT_LOG"
 
 ```
+
+
+Exemplo de output_log
+```{bash eval=FALSE, include=TRUE}
+Reading input files...
+Read 100 input files and 27994 sequences of total length 812378242 (includes rev.compl. sequences)
+Constructing the data structures...
+bwt end marker pos = 508270857
+wt size = 812378243, n = 812378243
+Construction complete, the main index requires 2596.4 MiB plus 1007.58 MiB for labels.
+All done.
+	Command being timed: "./fsm-lite -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt -s 6 -S 10 -m 1 --debug -v -t /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp/fsm_tmp_files_2025-08-03_05-29-48"
+	User time (seconds): 1438.90
+	System time (seconds): 34.26
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 24:45.74
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7919960
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5266291
+	Voluntary context switches: 1617
+	Involuntary context switches: 145208
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 17592624
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+```
+
+
+
+
+
+```{r eval=TRUE, cache=TRUE}
+require(ggplot2)
+require(lubridate)
+
+# Caminho dos logs
+log_dir <- "original/logs/"
+log_files <- list.files(log_dir, pattern = "fsm_output_log_.*\\.txt$", full.names = TRUE)
+
+print("Foram encontrados os arquivos")
+print(log_files)
+
+# Função auxiliar
+tempo_para_segundos <- function(t) {
+  if (grepl(":", t)) {
+    partes <- as.numeric(unlist(strsplit(t, ":")))
+    if (length(partes) == 3) return(partes[1]*3600 + partes[2]*60 + partes[3])
+    if (length(partes) == 2) return(partes[1]*60 + partes[2])
+  }
+  return(as.numeric(t))
+}
+
+# Função principal para extrair as informações
+extrair_dados_log <- function(arquivo) {
+  linhas <- readLines(arquivo)
+
+  get_valor <- function(chave) {
+    linha <- grep(chave, linhas, value = TRUE)
+    if (length(linha) > 0) {
+      return(str_trim(gsub(".*:\\s*", "", linha)))
+    } else {
+      return(NA)
+    }
+  }
+
+  # Número de genomas
+  genomas <- as.numeric(str_extract(get_valor("Read [0-9]+ input files"), "[0-9]+"))
+
+  # Linha do comando executado
+  comand <- get_valor("Command being timed")
+
+  # Tipo de saída
+  tipo_saida <- ifelse(grepl("\\.gz", comand), "GZ", "TXT")
+
+  # Parâmetros -S e -m
+  S_val <- as.numeric(str_match(comand, "-S\\s+(\\d+)")[,2])
+  m_val <- as.numeric(str_match(comand, "-m\\s+(\\d+)")[,2])
+
+  # Tempos
+  elapsed <- tempo_para_segundos(get_valor("Elapsed (wall clock) time"))
+  user <- as.numeric(get_valor("User time"))
+  system <- as.numeric(get_valor("System time"))
+  cpu_pct <- as.numeric(gsub("%", "", get_valor("Percent of CPU")))
+
+  # Memória
+  max_mem_kb <- as.numeric(get_valor("Maximum resident set size"))
+  max_mem_mb <- round(max_mem_kb / 1024, 2)
+
+  data.frame(
+    arquivo = basename(arquivo),
+    comand_used = comand,
+    genomas = genomas,
+    tipo_saida = tipo_saida,
+    param_S = S_val,
+    param_m = m_val,
+    elapsed_sec = elapsed,
+    user_time = user,
+    system_time = system,
+    cpu_percent = cpu_pct,
+    max_rss_mb = max_mem_mb
+  )
+}
+
+# Processar todos os arquivos
+tabela_logs <- do.call(rbind, lapply(log_files, extrair_dados_log))
+
+# Visualizar tabela
+print(tabela_logs)
+view(tabela_logs)
+
+write.csv(tabela_logs, "original/logs/resumo_fsm_execucoes.csv", row.names = FALSE)
+
+```
+
+
+```{r eval=TRUE, cache=TRUE}
+# Exemplo de gráfico: Tempo de execução por número de genomas, separado por tipo de saída
+ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = tipo_saida)) +
+  geom_line() + geom_point(size = 3) +
+  facet_grid(param_S ~ param_m, labeller = label_both) +
+  labs(title = "Tempo de execução vs Número de Genomas", x = "Genomas", y = "Tempo (s)")
+
+# Memória
+ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = tipo_saida)) +
+  geom_line() + geom_point(size = 3) +
+  facet_grid(param_S ~ param_m, labeller = label_both) +
+  labs(title = "Uso máximo de memória vs Genomas", x = "Genomas", y = "Memória (MB)")
+
+```
+
+
 
 
 Executando o arquivo `.sh`:
