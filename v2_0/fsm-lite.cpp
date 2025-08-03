@@ -1,11 +1,12 @@
 #include "default.h"
 #include "configuration.h"
 #include "input_reader.h"
-#include <sdsl/suffix_trees.hpp> // TODO: replace with csa+lcp array
+#include <sdsl/suffix_trees.hpp> 
 #include <sdsl/wt_algorithm.hpp>
 #include <iostream>
 #include <vector>
 #include <cstdlib> // std::exit()
+
 using namespace std;
 
 typedef sdsl::cst_sct3<> cst_t;
@@ -54,17 +55,6 @@ void wt_init(wt_t &wt, bitv_t &separator, cst_t &cst, input_reader *ir, configur
         exit(1);
     }
 
-    //TODO cleanup
-    /*for (uint64_t i = 0; i < n; ++i) 
-        cerr << cst.csa.text[i];
-    cerr << endl;
-    for (uint64_t i = 0; i < n; ++i) 
-        cerr << separator[i];
-    cerr << endl;
-    for (uint64_t i = 0; i < n; ++i) 
-        cerr << labels[cst.csa.isa[i]];
-    cerr << endl;
-    */  
         
     std::string tmp_file = sdsl::ram_file_name(sdsl::util::to_string(sdsl::util::pid())+"_"+sdsl::util::to_string(sdsl::util::id()));
     sdsl::store_to_file(labels, tmp_file);
@@ -113,7 +103,7 @@ int main(int argc, char ** argv)
     wt_init(label_wt, separator, cst, ir, config);
 
     bitv_t::rank_1_type sep_rank1(&separator);
-    //bitv_t::select_1_type sep_select1(&separator); TODO Remove?
+
     assert(sep_rank1(cst.size()) == ir->total_seqs());
     
     size_type support = 0;
@@ -149,15 +139,7 @@ int main(int argc, char ** argv)
         size_type sp = cst.lb(node);
         size_type ep = cst.rb(node);
         node_type wn = cst.wl(node, cst.csa.bwt[sp]);
-        /*if (config.debug)
-        {
-            size_type pos = cst.csa[sp];
-            auto s = extract(cst.csa, pos, pos + depth - 1);
-            cerr << "at node = " << depth << "-[" << sp << "," << ep << "], wl = " << (wn != root);
-            if (wn!=root)
-                cerr << "[" << cst.rb(wn)-cst.lb(wn) << " vs " << ep-sp << "]";
-            cerr << ", seq = " << s << endl;
-            }*/
+
         if (wn == root && config.debug)
         {
             cerr << "warning: no Weiner-link at " << depth << "-[" << sp << "," << ep << "]" << endl;
@@ -180,13 +162,6 @@ int main(int argc, char ** argv)
         if (depth > config.maxlength)
             depth = config.maxlength;
         size_type pos = cst.csa[sp];
-        // Check for separator symbol TODO cleanup
-        /*unsigned p_depth = cst.depth(cst.parent(node));
-        if (sep_rank1(pos) != sep_rank1(pos + p_depth))
-            continue; // Separator occurs above parent node
-        if (sep_rank1(pos) != sep_rank1(pos + depth))
-            depth = sep_select1(sep_rank1(pos)+1) - pos +1; // Separator above current node      
-        */
         
         if (sep_rank1(pos) != sep_rank1(pos + depth))
             continue;
