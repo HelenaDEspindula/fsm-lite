@@ -1,16 +1,18 @@
 #!/bin/bash
 
 INPUT_FILE="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt"
-LISTA="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_100.txt"
+LISTA="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_todos.txt"
 LOG_DIR="logs"
 INTERVAL_MONITOR=30
-GENOMAS=(5 10 25 50 100)
+## GENOMAS=(5 10 25 50 100 250)
+GENOMAS=250
 SMINUSCULO=6
 SMAIUSCULO=(10 50 200 600)
 MMINUSCULO=1
-TMP_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp"
-RES_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results"
 VERSION="1_0"
+TMP_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp"
+RES_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/${VERSION}"
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 
 PROGRAMA="./fsm-lite"
 
@@ -28,13 +30,12 @@ for N in "${GENOMAS[@]}"; do
   for J in "${SMAIUSCULO[@]}"; do
   
     echo "============================="
-    echo "Testando com TXT: $N amostras com $J de maximo as ${TIMESTAMP}"
   
     TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
-    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
-    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}"
-    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
+    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
+    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
   
     
   
@@ -62,13 +63,12 @@ for N in "${GENOMAS[@]}"; do
       done
     
     echo "============================="
-    echo "Testando com GZ: $N amostras com $J de maximo as ${TIMESTAMP}"
   
     TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
-    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
-    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}"
-    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}genomas_${J}_max--${TIMESTAMP}.txt"
+    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}genomas_${J}_max_GZ--${TIMESTAMP}.txt"
+    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}genomas_${J}_max_GZ--${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}genomas_${J}_max_GZ--${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}genomas_${J}_max_GZ--${TIMESTAMP}.txt.gz"
   
     
   
@@ -98,7 +98,8 @@ for N in "${GENOMAS[@]}"; do
   done
 
   wait "$FSM_PID"
-  echo "Finalizado testes com $N amostras com $J de maximo as ${TIMESTAMP}."
+  echo "Finalizado testes com $N amostras as ${TIMESTAMP}."
 done
 
+echo "============================="
 echo "Todos os testes foram concluídos."
