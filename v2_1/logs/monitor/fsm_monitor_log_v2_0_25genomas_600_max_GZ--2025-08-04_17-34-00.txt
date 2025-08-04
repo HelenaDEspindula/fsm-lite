@@ -1,0 +1,4 @@
+Rodando fsm-lite v2_0 saida GZ: para 25 amostras com 600 de maximo as 2025-08-04_17-34-00.
+timestamp	cpu	mem	vsz	rss
+1754339640	0.0	0.0	9640	2288
+1754339640	0,00	13	0,00	0,00
