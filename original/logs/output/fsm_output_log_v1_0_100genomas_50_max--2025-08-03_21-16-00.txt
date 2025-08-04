@@ -1,0 +1,30 @@
+Reading input files...
+Read 100 input files and 27994 sequences of total length 812378242 (includes rev.compl. sequences)
+Constructing the data structures...
+bwt end marker pos = 508270857
+wt size = 812378243, n = 812378243
+Construction complete, the main index requires 2596.4 MiB plus 1007.58 MiB for labels.
+All done.
+	Command being timed: "./fsm-lite -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt -s 6 -S 10 -m 1 --debug -v -t /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp/fsm_tmp_files_v1_0_100genomas_50_max--2025-08-03_21-16-00"
+	User time (seconds): 1430.60
+	System time (seconds): 36.02
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 24:35.46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7919808
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5266290
+	Voluntary context switches: 3570
+	Involuntary context switches: 142949
+	Swaps: 0
+	File system inputs: 56
+	File system outputs: 17592408
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

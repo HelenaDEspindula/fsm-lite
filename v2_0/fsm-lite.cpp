@@ -1,3 +1,5 @@
+/* VERSION 2.0 */
+
 /* --- Includes and Namespace --- */
 
 #include "default.h"
@@ -144,6 +146,12 @@ int main(int argc, char ** argv)
     node_type const node = buffer.back();
     buffer.pop_back();        
     unsigned depth = cst.depth(node);
+    
+    /* NEW IN THIS VERSION */
+    if (depth > 1000)
+      continue;
+    /* --- */
+    
     if (depth < config.maxlength)
       for (auto& child: cst.children(node))
         buffer.push_back(child);
@@ -190,6 +198,15 @@ int main(int argc, char ** argv)
         if (config.minfreq <= rank_ep[i]-rank_sp[i])
           cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
+        
+        /* NEW IN THIS VERSION */
+        labels.clear();
+        rank_sp.clear();
+        rank_ep.clear();
+        labels.shrink_to_fit();
+        rank_sp.shrink_to_fit();
+        rank_ep.shrink_to_fit();
+        /* --- */
   }
   
   if (config.verbose)

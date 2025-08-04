@@ -4,13 +4,13 @@ INPUT_FILE="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-li
 LISTA="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_100.txt"
 LOG_DIR="logs"
 INTERVAL_MONITOR=30
-GENOMAS=(5 10 25 50 100)
+GENOMAS=20
 SMINUSCULO=6
-SMAIUSCULO=(10 50 200 600)
+SMAIUSCULO=600
 MMINUSCULO=1
 TMP_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp"
 RES_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results"
-VERSION="1_0"
+VERSION="2_0"
 
 PROGRAMA="./fsm-lite"
 
