@@ -1053,13 +1053,14 @@ tempo_para_segundos <- function(t) {
 extrair_dados_log <- function(arquivo) {
   linhas <- readLines(arquivo)
   nome <- basename(arquivo)
-
+  
   # Extrair metadados do nome do arquivo
   versao <- str_match(nome, "fsm_output_log_(v[0-9_]+)")[,2]
   genomas <- as.numeric(str_match(nome, "_([0-9]+)genomas")[,2])
   max_param <- as.numeric(str_match(nome, "_([0-9]+)_max")[,2])
+  tipo_output <- str_match(nome, "_(TXT|GZ)--")[,2]
   timestamp <- str_match(nome, "--([0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9-]{8})")[,2]
-
+  
   get_valor <- function(chave) {
     linha <- grep(chave, linhas, value = TRUE)
     if (length(linha) > 0) {
@@ -1068,20 +1069,34 @@ extrair_dados_log <- function(arquivo) {
       return(NA)
     }
   }
-
+  
+  # Extrai tempo decorrido como string tipo "4:31.51"
+  get_elapsed <- function(linhas) {
+    linha <- grep("Elapsed \\(wall clock\\) time", linhas, value = TRUE)
+    if (length(linha) > 0) {
+      tempo <- str_match(linha, ":\\s*(\\d+:\\d+(\\.\\d+)?)")[,2]
+      return(tempo)
+    } else {
+      return(NA)
+    }
+  }
+  
   # Extração dos dados do conteúdo
-  elapsed <- tempo_para_segundos(get_valor("Elapsed (wall clock) time"))
+  elapsed <- tempo_para_segundos(get_elapsed(linhas))
   user <- as.numeric(get_valor("User time"))
   system <- as.numeric(get_valor("System time"))
   cpu_pct <- as.numeric(gsub("%", "", get_valor("Percent of CPU")))
   max_mem_kb <- as.numeric(get_valor("Maximum resident set size"))
   max_mem_mb <- round(max_mem_kb / 1024, 2)
-
+  
+  print(elapsed)
+  
   data.frame(
     arquivo = nome,
     versao = versao,
     genomas = genomas,
     max_param = max_param,
+    tipo_output = tipo_output,
     timestamp = timestamp,
     elapsed_sec = elapsed,
     user_time = user,
@@ -1104,21 +1119,178 @@ write.csv(tabela_logs, "original/resumo_execucoes_v1_0.csv", row.names = FALSE)
 
 ```
 
+```{r}
+library(ggplot2)
+library(dplyr)
 
-```{r eval=TRUE, cache=TRUE}
-# Gráfico: tempo de execução
-ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = interaction(param_S, param_m))) +
-  geom_line() + geom_point(size = 3) +
-  labs(title = "Tempo de execução vs Número de Genomas", x = "Genomas", y = "Tempo (s)", color = "S_m")
+tabela_logs <- read.csv("original/resumo_execucoes_v1_0.csv")
 
-# Gráfico: uso de memória
-ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = interaction(param_S, param_m))) +
-  geom_line() + geom_point(size = 3) +
-  labs(title = "Uso máximo de memória vs Número de Genomas", x = "Genomas", y = "Memória (MB)", color = "S_m")
+# Garantir que colunas relevantes estejam bem definidas
+tabela_logs$tipo_output <- factor(tabela_logs$tipo_output, levels = c("TXT", "GZ"))
+tabela_logs$genomas <- as.numeric(tabela_logs$genomas)
+tabela_logs$max_param <- as.numeric(tabela_logs$max_param)
+
+# 1. Variação de `max_param` para o mesmo número de genomas
+ggplot(tabela_logs, aes(x = max_param, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Tempo vs max_param (fixando número de genomas)",
+       x = "Parâmetro máximo", y = "Tempo decorrido (s)", color = "Saída")
+
+
+ggplot(tabela_logs, aes(x = max_param, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Uso de memória vs max_param (fixando número de genomas)",
+       x = "Parâmetro máximo", y = "Pico de RAM (MB)", color = "Saída")
+
+
+# 2. Variação de `genomas` para o mesmo max_param
+ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~max_param, scales = "free_y", labeller = label_both) +
+  labs(title = "Tempo vs número de genomas (fixando max_param)",
+       x = "Número de genomas", y = "Tempo decorrido (s)", color = "Saída")
+
+ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~max_param, scales = "free_x", labeller = label_both) +
+  labs(title = "Uso de memória vs número de genomas (fixando max_param)",
+       x = "Número de genomas", y = "Pico de RAM (MB)", color = "Saída")
+
+# 3. Comparação entre tipo_output (TXT vs GZ) para mesmo genoma e max_param
+ggplot(tabela_logs, aes(x = tipo_output, y = elapsed_sec, fill = tipo_output)) +
+  geom_col(position = position_dodge()) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Tempo por tipo de saída (TXT vs GZ)",
+       x = "Tipo de saída", y = "Tempo decorrido (s)")
+
+ggplot(tabela_logs, aes(x = tipo_output, y = max_rss_mb, fill = tipo_output)) +
+  geom_col(position = position_dodge()) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Uso de memória por tipo de saída (TXT vs GZ)",
+       x = "Tipo de saída", y = "Pico de RAM (MB)")
+```
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+#  1. Ler a tabela
+tabela_logs <- read.csv("original/resumo_execucoes_v1_0.csv")
+
+#  2. Garantir tipos corretos
+tabela_logs$tipo_output <- factor(tabela_logs$tipo_output, levels = c("TXT", "GZ"))
+tabela_logs$genomas <- as.numeric(tabela_logs$genomas)
+tabela_logs$max_param <- as.numeric(tabela_logs$max_param)
+
+#  3. Criar pasta para salvar
+dir.create("graficos", showWarnings = FALSE)
+
+# Função auxiliar para salvar
+salvar_plot <- function(p, nome, width = 9, height = 6) {
+  ggsave(filename = paste0("graficos/", nome, ".png"), plot = p, width = width, height = height, dpi = 300)
+}
+
+#  4. Geração dos gráficos
+
+## 1. Tempo vs max_param (fixando genomas)
+p1 <- ggplot(tabela_logs, aes(x = max_param, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Tempo vs max_param (fixando número de genomas)",
+       x = "Parâmetro máximo", y = "Tempo decorrido (s)", color = "Saída")
+salvar_plot(p1, "tempo_vs_maxparam_por_genoma")
+
+## 2. Memória vs max_param (fixando genomas)
+p2 <- ggplot(tabela_logs, aes(x = max_param, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Uso de memória vs max_param (fixando número de genomas)",
+       x = "Parâmetro máximo", y = "Pico de RAM (MB)", color = "Saída")
+salvar_plot(p2, "memoria_vs_maxparam_por_genoma")
+
+## 3. Tempo vs genomas (fixando max_param)
+p3 <- ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~max_param, scales = "free_y", labeller = label_both) +
+  labs(title = "Tempo vs número de genomas (fixando max_param)",
+       x = "Número de genomas", y = "Tempo decorrido (s)", color = "Saída")
+salvar_plot(p3, "tempo_vs_genomas_por_maxparam")
+
+## 4. Memória vs genomas (fixando max_param)
+p4 <- ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1) +
+  geom_point(size = 2) +
+  facet_wrap(~max_param, scales = "free_y", labeller = label_both) +
+  labs(title = "Uso de memória vs número de genomas (fixando max_param)",
+       x = "Número de genomas", y = "Pico de RAM (MB)", color = "Saída")
+salvar_plot(p4, "memoria_vs_genomas_por_maxparam")
+
+## 5. Comparação TXT vs GZ (barras por faceta)
+p5 <- ggplot(tabela_logs, aes(x = tipo_output, y = elapsed_sec, fill = tipo_output)) +
+  geom_col(position = position_dodge()) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Tempo por tipo de saída (TXT vs GZ)",
+       x = "Tipo de saída", y = "Tempo decorrido (s)")
+salvar_plot(p5, "barras_tempo_tipo_saida")
+
+p6 <- ggplot(tabela_logs, aes(x = tipo_output, y = max_rss_mb, fill = tipo_output)) +
+  geom_col(position = position_dodge()) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Uso de memória por tipo de saída (TXT vs GZ)",
+       x = "Tipo de saída", y = "Pico de RAM (MB)")
+salvar_plot(p6, "barras_memoria_tipo_saida")
 
 
 ```
 
+
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+
+# Vamos pegar os dados de uma condição específica de max_param (ex: 200)
+dados_modelo <- tabela_logs %>% filter(max_param == 200 & tipo_output == "TXT")
+
+# Ajustar modelos
+modelo_linear <- lm(elapsed_sec ~ genomas, data = dados_modelo)
+modelo_quad <- lm(elapsed_sec ~ poly(genomas, 2), data = dados_modelo)
+
+# Comparar modelos
+summary(modelo_linear)
+summary(modelo_quad)
+
+# Plotar com ajuste
+p7 <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue", linetype = "dashed") +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, color = "red") +
+  labs(title = "Ajuste de Tempo vs Genomas",
+       subtitle = "Azul = linear (O(n)), Vermelho = quadrático (O(n²))",
+       x = "Genomas", y = "Tempo (s)")
+salvar_plot(p7, "ajuste_de_tempo_vs_genomas_para_bigO")
+
+p8 <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = "Log-Log: Tempo vs Genomas", x = "log(Genomas)", y = "log(Tempo)")
+salvar_plot(p8, "ajuste_de_tempo_vs_genomas_para_bigO")
+
+
+```
 
 
 
