@@ -147,7 +147,7 @@ int main(int argc, char ** argv)
     buffer.pop_back();        
     unsigned depth = cst.depth(node);
     
-    /* NEW IN THIS VERSION */
+    /* New in Version 2.0 */
     if (depth > 1000)
       continue;
     /* --- */
@@ -199,7 +199,7 @@ int main(int argc, char ** argv)
           cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
         
-        /* NEW IN THIS VERSION */
+        /* New in version 2.0 */
         labels.clear();
         rank_sp.clear();
         rank_ep.clear();
