@@ -1508,3 +1508,31 @@ write.csv(tabela_logs, "v2_0/resumo_execucoes_v2_0.csv", row.names = FALSE)
 Graficos:
 
 
+```{r}
+
+arq1 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/1_0/fsm_results_v1_0_25genomas_600_max_GZ--2025-08-04_02-55-43.txt"
+arq2 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_GZ--2025-08-04_17-34-00.txt"
+
+if (!file.exists(arq1) || !file.exists(arq2)) {
+  stop("Erro: Um dos arquivos não existe.")
+}
+
+linhas1 <- readLines(arq1, warn = FALSE)
+linhas2 <- readLines(arq2, warn = FALSE)
+
+if (identical(linhas1, linhas2)) {
+  cat("Os arquivos sao IGUAIS.\n")
+} else {
+  cat("Os arquivos sao DIFERENTES.\n")
+  max_linhas <- max(length(linhas1), length(linhas2))
+  for (i in seq_len(max_linhas)) {
+    l1 <- if (i <= length(linhas1)) linhas1[i] else "<linha ausente>"
+    l2 <- if (i <= length(linhas2)) linhas2[i] else "<linha ausente>"
+    if (!identical(l1, l2)) {
+      cat(sprintf("Linha %d:\n  Arquivo 1: %s\n  Arquivo 2: %s\n\n", i, l1, l2))
+    }
+  }
+}
+
+```
+
