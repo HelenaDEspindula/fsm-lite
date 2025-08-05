@@ -735,6 +735,99 @@ https://conda.anaconda.org/conda-forge/linux-64/sdsl-lite-2.1.1-h00ab1b0_1002.co
 https://conda.anaconda.org/bioconda/linux-64/fsm-lite-1.0-h9948957_6.tar.bz2
 
 
+(fsm-lite-conda) helena.despindula@BIOINFO08:~/LACTAS-HELISSON-01/Helena-stuff/fsm-lite/v2_2$ conda install conda-forge::msmtp-sendmail
+/usr/local/miniconda3/lib/python3.9/site-packages/conda/base/context.py:211: FutureWarning: Adding 'defaults' to channel list implicitly is deprecated and will be removed in 25.9. 
+
+To remove this warning, please choose a default channel explicitly with conda's regular configuration system, e.g. by adding 'defaults' to the list of channels:
+
+  conda config --add channels defaults
+
+For more information see https://docs.conda.io/projects/conda/en/stable/user-guide/configuration/use-condarc.html
+
+  deprecated.topic(
+Retrieving notices: done
+/usr/local/miniconda3/lib/python3.9/site-packages/conda/base/context.py:211: FutureWarning: Adding 'defaults' to channel list implicitly is deprecated and will be removed in 25.9. 
+
+To remove this warning, please choose a default channel explicitly with conda's regular configuration system, e.g. by adding 'defaults' to the list of channels:
+
+  conda config --add channels defaults
+
+For more information see https://docs.conda.io/projects/conda/en/stable/user-guide/configuration/use-condarc.html
+
+  deprecated.topic(
+Channels:
+ - defaults
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /home/helena.despindula/.conda/envs/fsm-lite-conda
+
+  added / updated specs:
+    - conda-forge::msmtp-sendmail
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    ca-certificates-2025.2.25  |       h06a4308_0         129 KB
+    gmp-6.3.0                  |       h6a678d5_0         608 KB
+    krb5-1.21.3                |       h723845a_3         286 KB
+    libedit-3.1.20230828       |       h5eee18b_0         179 KB
+    libffi-3.4.4               |       h6a678d5_1         141 KB
+    libgcrypt-lib-1.11.1       |       hb9d3cd8_0         577 KB  conda-forge
+    libgpg-error-1.55          |       h3f2d84a_0         305 KB  conda-forge
+    libgsasl-2.2.2             |       h1bdc22f_0         206 KB  conda-forge
+    libidn2-2.3.4              |       h5eee18b_0         146 KB
+    libkrb5-1.21.3             |       h520c7b4_3         878 KB
+    libntlm-1.8                |       hb9d3cd8_0          33 KB  conda-forge
+    libunistring-0.9.10        |       h27cfd23_0         536 KB
+    lmdb-0.9.29                |       h2531618_0         424 KB
+    msmtp-1.8.30               |       hdce3e81_0         200 KB  conda-forge
+    msmtp-sendmail-1.8.30      |       hfc2019e_0          19 KB  conda-forge
+    ncurses-6.5                |       h7934f7d_0         1.1 MB
+    openssl-3.0.17             |       h5eee18b_0         5.2 MB
+    ------------------------------------------------------------
+                                           Total:        10.9 MB
+
+The following NEW packages will be INSTALLED:
+
+  ca-certificates    pkgs/main/linux-64::ca-certificates-2025.2.25-h06a4308_0 
+  gmp                pkgs/main/linux-64::gmp-6.3.0-h6a678d5_0 
+  gnutls             conda-forge/linux-64::gnutls-3.8.9-h86084c0_1 
+  krb5               pkgs/main/linux-64::krb5-1.21.3-h723845a_3 
+  libedit            pkgs/main/linux-64::libedit-3.1.20230828-h5eee18b_0 
+  libffi             pkgs/main/linux-64::libffi-3.4.4-h6a678d5_1 
+  libgcrypt-lib      conda-forge/linux-64::libgcrypt-lib-1.11.1-hb9d3cd8_0 
+  libgpg-error       conda-forge/linux-64::libgpg-error-1.55-h3f2d84a_0 
+  libgsasl           conda-forge/linux-64::libgsasl-2.2.2-h1bdc22f_0 
+  libidn2            pkgs/main/linux-64::libidn2-2.3.4-h5eee18b_0 
+  libkrb5            pkgs/main/linux-64::libkrb5-1.21.3-h520c7b4_3 
+  libntlm            conda-forge/linux-64::libntlm-1.8-hb9d3cd8_0 
+  libtasn1           conda-forge/linux-64::libtasn1-4.20.0-hb9d3cd8_0 
+  libunistring       pkgs/main/linux-64::libunistring-0.9.10-h27cfd23_0 
+  lmdb               pkgs/main/linux-64::lmdb-0.9.29-h2531618_0 
+  msmtp              conda-forge/linux-64::msmtp-1.8.30-hdce3e81_0 
+  msmtp-sendmail     conda-forge/linux-64::msmtp-sendmail-1.8.30-hfc2019e_0 
+  ncurses            pkgs/main/linux-64::ncurses-6.5-h7934f7d_0 
+  nettle             conda-forge/linux-64::nettle-3.10.1-h4a9d5aa_0 
+  openssl            pkgs/main/linux-64::openssl-3.0.17-h5eee18b_0 
+  p11-kit            conda-forge/linux-64::p11-kit-0.24.1-hc5aa10d_0 
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages:
+                                                                                                                                                                         
+Preparing transaction: done                                                                                                                                              
+Verifying transaction: done                                                                                                                                              
+Executing transaction: done   
+
 ```
 
 
