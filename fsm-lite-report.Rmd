@@ -1510,8 +1510,8 @@ Graficos:
 
 ```{r}
 
-arq1 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/1_0/fsm_results_v1_0_25genomas_600_max_GZ--2025-08-04_02-55-43.txt"
-arq2 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_GZ--2025-08-04_17-34-00.txt"
+arq1 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_1/fsm_results_v2_1_25genomas_600_max_TXT--2025-08-05_03-30-29.txt"
+arq2 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_TXT--2025-08-05_01-28-02.txt"
 
 if (!file.exists(arq1) || !file.exists(arq2)) {
   stop("Erro: Um dos arquivos não existe.")
