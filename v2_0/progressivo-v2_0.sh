@@ -47,7 +47,7 @@ for N in "${GENOMAS[@]}"; do
     echo "Rodando fsm-lite v${VERSION} saida TXT: para $N amostras com $J de maximo as ${TIMESTAMP}."
 
     # Executar fsm-lite em background
-    ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO  -t "$TMP_FILES" > "$OUTPUT_RES" 2> "$OUTPUT_LOG" ) &
+    ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO -t "$TMP_FILES" > "$OUTPUT_RES" 2> "$OUTPUT_LOG" ) &
     FSM_PID=$!
 
     echo "Monitorando PID: $FSM_PID"

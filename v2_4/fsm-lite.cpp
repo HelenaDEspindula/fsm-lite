@@ -292,15 +292,17 @@ int main(int argc, char ** argv)
           cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
         
-        /* New in version 2.0 */
-        labels.clear();
-        rank_sp.clear();
-        rank_ep.clear();
-        labels.shrink_to_fit();
-        rank_sp.shrink_to_fit();
-        rank_ep.shrink_to_fit();
-        /* --- */
+
   }
+  
+  /* New in Version 2.4 */
+  if (config.verbose)
+  {
+    cerr << "[VERBOSE] Finishing execution. Total allocated memory estimated by SDSL: "
+         << size_in_mega_bytes(cst) + size_in_mega_bytes(label_wt)
+         << " in MiB (not counting buffers and auxiliary vectors)." << endl;
+  }
+  /* --- */
   
   if (config.verbose)
     cerr << "[VERBOSE] All done." << endl;    

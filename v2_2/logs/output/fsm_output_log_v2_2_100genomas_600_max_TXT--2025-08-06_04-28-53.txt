@@ -1,0 +1,72 @@
+[VERBOSE] Nova profundidade máxima observada: 1
+[VERBOSE] Nova profundidade máxima observada: 2
+[VERBOSE] Nova profundidade máxima observada: 3
+[VERBOSE] Nova profundidade máxima observada: 4
+[VERBOSE] Nova profundidade máxima observada: 5
+[VERBOSE] Nova profundidade máxima observada: 6
+[VERBOSE] Nova profundidade máxima observada: 7
+[VERBOSE] Nova profundidade máxima observada: 8
+[VERBOSE] Nova profundidade máxima observada: 9
+[VERBOSE] Nova profundidade máxima observada: 10
+[VERBOSE] Nova profundidade máxima observada: 11
+[VERBOSE] Nova profundidade máxima observada: 12
+[VERBOSE] Nova profundidade máxima observada: 13
+[VERBOSE] Nova profundidade máxima observada: 14
+[VERBOSE] Nova profundidade máxima observada: 15
+[VERBOSE] Nova profundidade máxima observada: 16
+[VERBOSE] Nova profundidade máxima observada: 17
+[VERBOSE] Nova profundidade máxima observada: 18
+[VERBOSE] Nova profundidade máxima observada: 19
+[VERBOSE] Nova profundidade máxima observada: 20
+[VERBOSE] Nova profundidade máxima observada: 21
+[VERBOSE] Nova profundidade máxima observada: 22
+[VERBOSE] Nova profundidade máxima observada: 23
+[VERBOSE] Nova profundidade máxima observada: 24
+[VERBOSE] Nova profundidade máxima observada: 25
+[VERBOSE] Nova profundidade máxima observada: 26
+[VERBOSE] Nova profundidade máxima observada: 27
+[VERBOSE] Nova profundidade máxima observada: 247
+[VERBOSE] Nova profundidade máxima observada: 312900294
+[VERBOSE] Nova profundidade máxima observada: 371640888
+[VERBOSE] Nova profundidade máxima observada: 694903636
+[VERBOSE] Nova profundidade máxima observada: 698781447
+[VERBOSE] Nova profundidade máxima observada: 795218032
+[VERBOSE] Nova profundidade máxima observada: 797372256
+[VERBOSE] Nova profundidade máxima observada: 804567503
+[VERBOSE] Nova profundidade máxima observada: 804761842
+[VERBOSE] Nova profundidade máxima observada: 805665566
+[VERBOSE] Nova profundidade máxima observada: 810248193
+[VERBOSE] Nova profundidade máxima observada: 810748748
+[VERBOSE] Nova profundidade máxima observada: 811209277
+[VERBOSE] Nova profundidade máxima observada: 812330299
+[VERBOSE] Nova profundidade máxima observada: 812330361
+[VERBOSE] Nova profundidade máxima observada: 812335768
+[VERBOSE] Nova profundidade máxima observada: 812335772
+[VERBOSE] Nova profundidade máxima observada: 812335781
+[VERBOSE] Nova profundidade máxima observada: 812335794
+[VERBOSE] Nova profundidade máxima observada: 812335813
+[VERBOSE] Nova profundidade máxima observada: 812335816
+[VERBOSE] Nova profundidade máxima observada: 812335819
+	Command being timed: "./fsm-lite -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt -s 6 -S 600 -m 1 -t /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp/fsm_tmp_files_v2_2_100genomas_600_max_TXT--2025-08-06_04-28-53"
+	User time (seconds): 2278.10
+	System time (seconds): 57.53
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 39:20.44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7919912
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5422135
+	Voluntary context switches: 2785
+	Involuntary context switches: 232719
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 47518128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
