@@ -1508,10 +1508,80 @@ write.csv(tabela_logs, "v2_0/resumo_execucoes_v2_0.csv", row.names = FALSE)
 Graficos:
 
 
+
+
+```{r compara_txts, eval=TRUE}
+# Lista de arquivos TXT a comparar
+arquivos <- c(
+  "../fsm-lite-results/1_0/fsm_results_v1_0_25genomas_600_max_TXT--2025-08-04_02-49-29.txt",
+  "../fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_TXT--2025-08-05_23-30-28.txt",
+  "../fsm-lite-results/2_1/fsm_results_v2_1_25genomas_600_max_TXT--2025-08-06_01-53-43.txt",
+  "../fsm-lite-results/2_2/fsm_results_v2_2_25genomas_600_max_TXT--2025-08-06_04-13-50.txt",
+  "../fsm-lite-results/2_3/fsm_results_v2_3_25genomas_600_max_TXT--2025-08-06_06-33-27.txt",
+  "../fsm-lite-results/2_4/fsm_results_v2_4_25genomas_600_max_TXT--2025-08-06_08-54-05.txt"
+              )
+arquivo1 <- arquivos[1]
+arquivo1 <- arquivos[2]
+
+arquivo1
+
+arquivo2
+```
+
+
+```{r compara_txts, eval=TRUE}
+# Função para comparar dois arquivos grandes sem carregar tudo na memória
+arquivos_iguais <- function(arquivo1, arquivo2) {
+  con1 <- file(arquivo1, "rb")
+  con2 <- file(arquivo2, "rb")
+  on.exit({
+    close(con1)
+    close(con2)
+  })
+  
+  repeat {
+    bloco1 <- readBin(con1, what = "raw", n = 65536) # 64KB
+    bloco2 <- readBin(con2, what = "raw", n = 65536)
+    if (!identical(bloco1, bloco2)) return(FALSE)
+    if (length(bloco1) == 0) break
+  }
+  
+  return(TRUE)
+}
+
+# Comparação dois a dois
+resultado <- data.frame(
+  Arquivo1 = character(),
+  Arquivo2 = character(),
+  Iguais = logical(),
+  stringsAsFactors = FALSE
+)
+
+for (i in seq_along(arquivos)) {
+  for (j in seq(i + 1, length(arquivos))) {
+    iguais <- arquivos_iguais(arquivos[i], arquivos[j])
+    resultado <- rbind(
+      resultado,
+      data.frame(
+        Arquivo1 = basename(arquivos[i]),
+        Arquivo2 = basename(arquivos[j]),
+        Iguais = iguais,
+        stringsAsFactors = FALSE
+      )
+    )
+  }
+}
+
+print(resultado)
+
+```
+
+
+
 ```{r}
 
-arq1 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_1/fsm_results_v2_1_25genomas_600_max_TXT--2025-08-05_03-30-29.txt"
-arq2 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_TXT--2025-08-05_01-28-02.txt"
+arq1 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_1/fsm_results_v2_1_25genomas_600_max_TXT--2025-08-06_01-53-43.txt"
+arq2 <- "/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/2_0/fsm_results_v2_0_25genomas_600_max_TXT--2025-08-05_23-30-28.txt"
 
 if (!file.exists(arq1) || !file.exists(arq2)) {
   stop("Erro: Um dos arquivos não existe.")

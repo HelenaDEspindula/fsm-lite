@@ -299,14 +299,14 @@ int main(int argc, char ** argv)
           cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
         cout << '\n';
         
-        /* New in version 2.5 */
-        labels.clear();
-        rank_sp.clear();
-        rank_ep.clear();
-        labels.assign(labels.size(), 0);
-        rank_sp.assign(rank_sp.size(), 0);
-        rank_ep.assign(rank_ep.size(), 0);
-        /* --- */
+        // /* New in version 2.5 */
+        // labels.clear();
+        // rank_sp.clear();
+        // rank_ep.clear();
+        // labels.assign(labels.size(), 0);
+        // rank_sp.assign(rank_sp.size(), 0);
+        // rank_ep.assign(rank_ep.size(), 0);
+        // /* --- */
   }
   
   /* New in Version 2.4 */
