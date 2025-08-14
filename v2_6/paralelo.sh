@@ -26,10 +26,10 @@ for N in "${GENOMAS[@]}"; do
   while IFS=$'\t' read -r ID PATH; do
     TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 
-    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${ID}_${N}genomas_TXT--${TIMESTAMP}.txt"
-    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${ID}_${N}genomas_TXT--${TIMESTAMP}.txt"
-    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${ID}_${N}genomas_TXT--${TIMESTAMP}"
-    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${ID}_${N}genomas_TXT--${TIMESTAMP}.txt"
+    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${ID}_${N}_genomas_TXT--${TIMESTAMP}.txt"
+    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${ID}_${N}_genomas_TXT--${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${ID}_${N}_genomas_TXT--${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${ID}_${N}_genomas_TXT--${TIMESTAMP}.txt"
 
     echo -e "${ID}\t${PATH}" > "$TMP_FILES.list"
 
