@@ -1,4 +1,4 @@
-#!/bin/bash
+see#!/bin/bash
 
 # Corrige o PATH para garantir acesso aos comandos mesmo dentro do Conda
 export PATH="$CONDA_PREFIX/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
@@ -31,7 +31,7 @@ for N in "${GENOMAS[@]}"; do
     echo "Rodando fsm-lite v${VERSION} saída TXT para $N amostras com $J máximo às ${TIMESTAMP}." | tee "$MONITOR_LOG" > "$OUTPUT_LOG"
     echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
 
-    ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO -t "$TMP_FILES" > "$OUTPUT_RES" 2>> "$OUTPUT_LOG" ) &
+    ( /usr/bin/time -v "$PROGRAMA" -l "$INPUT_FILE" -s $SMINUSCULO -S $SMAIUSCULO -m $MMINUSCULO -t "$TMP_FILES" > "$OUTPUT_RES" 2> "$OUTPUT_LOG" ) &
     FSM_PID=$!
 
     echo "[INFO] Monitorando PID: $FSM_PID"
