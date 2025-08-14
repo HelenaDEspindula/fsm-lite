@@ -1,0 +1,25 @@
+[ERROR] Label sum failed, j = 145147309, n = 201608973
+Command exited with non-zero status 1
+	Command being timed: "./fsm-lite -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt -s 6 -S 600 -m 1 -t /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp/fsm_tmp_files_v2_5_25genomas_600_max_TXT--2025-08-13_17-17-09"
+	User time (seconds): 186.35
+	System time (seconds): 7.87
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:16.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2419996
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1519654
+	Voluntary context switches: 677
+	Involuntary context switches: 19257
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4164400
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

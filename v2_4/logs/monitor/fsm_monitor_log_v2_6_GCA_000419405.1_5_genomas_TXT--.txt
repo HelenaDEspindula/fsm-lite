@@ -1,0 +1,2 @@
+Rodando fsm-lite v2_6 genoma GCA_000419405.1: .
+timestamp	cpu	mem	vsz	rss
