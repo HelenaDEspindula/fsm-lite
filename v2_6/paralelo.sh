@@ -37,14 +37,16 @@ for N in "${GENOMAS[@]}"; do
     echo "[INFO] Monitorando PID: $FSM_PID"
 
     while kill -0 "$FSM_PID" 2>/dev/null; do
-      timestamp=$($CONDA_PREFIX/bin/date +%s)
-      /usr/bin/ps -p "$FSM_PID" -o %cpu,%mem,vsz,rss --no-headers | \
-        /usr/bin/awk -v t="$timestamp" '{print t"\t"$1"\t"$2"\t"$3"\t"$4}' >> "$MONITOR_LOG"
+    
 
-      usr/bin/pidstat -h -r -u -p $FSM_PID 1 1 | \
-        usr/bin/awk -v t="$timestamp" 'NR==4 {print t"\t"$8"\t"$9"\t"$10"\t"$11}' >> "$MONITOR_LOG"
+timestamp=$(/bin/date +%s)
+/bin/ps -p "$FSM_PID" -o %cpu,%mem,vsz,rss --no-headers | \
+  /usr/bin/awk -v t="$timestamp" '{print t"\t"$1"\t"$2"\t"$3"\t"$4}' >> "$MONITOR_LOG"
+/usr/bin/pidstat -h -r -u -p $FSM_PID 1 1 | \
+  /usr/bin/awk -v t="$timestamp" 'NR==4 {print t"\t"$8"\t"$9"\t"$10"\t"$11}' >> "$MONITOR_LOG"
+/bin/sleep "$INTERVAL_MONITOR"
 
-      $CONDA_PREFIX/bin/sleep "$INTERVAL_MONITOR"
+
     done
 
     wait "$FSM_PID"
