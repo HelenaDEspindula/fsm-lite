@@ -1,0 +1,1 @@
+time ./fsm-lite -v --debug -m 1 -s 6 -S 600 -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_010.txt -t temp-test > resultado-teste-2025-08-14--18h21.txt
