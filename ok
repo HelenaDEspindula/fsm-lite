@@ -1,0 +1,10 @@
+# Name                     Version          Build            Channel
+_libgcc_mutex              0.1              main
+_openmp_mutex              5.1              1_gnu
+fsm-lite                   1.0              h9948957_6       bioconda
+libgcc                     15.1.0           h767d61c_4       conda-forge
+libgcc-ng                  15.1.0           h69a702a_4       conda-forge
+libgomp                    15.1.0           h767d61c_4       conda-forge
+libstdcxx                  15.1.0           h8f9b012_4       conda-forge
+libstdcxx-ng               15.1.0           h4852527_4       conda-forge
+sdsl-lite                  2.1.1            h00ab1b0_1002    conda-forge

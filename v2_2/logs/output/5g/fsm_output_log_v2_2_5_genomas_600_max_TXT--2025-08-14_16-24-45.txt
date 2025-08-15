@@ -1,0 +1,48 @@
+[VERBOSE] Nova profundidade máxima observada: 1
+[VERBOSE] Nova profundidade máxima observada: 2
+[VERBOSE] Nova profundidade máxima observada: 3
+[VERBOSE] Nova profundidade máxima observada: 4
+[VERBOSE] Nova profundidade máxima observada: 5
+[VERBOSE] Nova profundidade máxima observada: 6
+[VERBOSE] Nova profundidade máxima observada: 7
+[VERBOSE] Nova profundidade máxima observada: 8
+[VERBOSE] Nova profundidade máxima observada: 9
+[VERBOSE] Nova profundidade máxima observada: 10
+[VERBOSE] Nova profundidade máxima observada: 11
+[VERBOSE] Nova profundidade máxima observada: 12
+[VERBOSE] Nova profundidade máxima observada: 39644478
+[VERBOSE] Nova profundidade máxima observada: 39861182
+[VERBOSE] Nova profundidade máxima observada: 39863283
+[VERBOSE] Nova profundidade máxima observada: 39877492
+[VERBOSE] Nova profundidade máxima observada: 39902077
+[VERBOSE] Nova profundidade máxima observada: 39915687
+[VERBOSE] Nova profundidade máxima observada: 39949858
+[VERBOSE] Nova profundidade máxima observada: 39949875
+[VERBOSE] Nova profundidade máxima observada: 39957717
+[VERBOSE] Nova profundidade máxima observada: 39957745
+[VERBOSE] Nova profundidade máxima observada: 39957748
+[VERBOSE] Nova profundidade máxima observada: 39957753
+[VERBOSE] Nova profundidade máxima observada: 39957754
+	Command being timed: "./fsm-lite -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_temp.txt -s 6 -S 600 -m 1 -t /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp/fsm_tmp_files_v2_2_5_genomas_600_max_TXT--2025-08-14_16-24-45"
+	User time (seconds): 62.91
+	System time (seconds): 1.38
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:04.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 365084
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 291588
+	Voluntary context switches: 514
+	Involuntary context switches: 6259
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 785640
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

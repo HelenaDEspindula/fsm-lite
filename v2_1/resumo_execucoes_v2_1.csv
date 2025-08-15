@@ -1,0 +1,4 @@
+"arquivo","versao","genomas","max_param","tipo_output","timestamp","elapsed_sec","user_time","system_time","cpu_percent","max_rss_mb"
+"fsm_output_log_v2_1_100genomas_600_max_TXT--2025-08-06_02-08-45.txt","v2_1_100",100,600,"TXT","2025-08-06_02-08-45",2373.88,2290.16,75.47,99,7734.27
+"fsm_output_log_v2_1_250genomas_600_max_TXT--2025-08-06_02-48-43.txt","v2_1_250",250,600,"TXT","2025-08-06_02-48-43",84,4860.8,193.3,99,19390.44
+"fsm_output_log_v2_1_25genomas_600_max_TXT--2025-08-06_01-53-43.txt","v2_1_25",25,600,"TXT","2025-08-06_01-53-43",883.43,867.25,13.21,99,1794.41

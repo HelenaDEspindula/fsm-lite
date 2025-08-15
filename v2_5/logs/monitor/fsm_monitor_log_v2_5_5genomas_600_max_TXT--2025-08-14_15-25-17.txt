@@ -1,0 +1,4 @@
+Rodando fsm-lite v2_5 saida TXT: para 5 amostras com 600 de maximo as 2025-08-14_15-25-17.
+timestamp	cpu	mem	vsz	rss
+1755195917	0.0	0.0	2500	720
+1755195917	0.00	113	0.00	0.00

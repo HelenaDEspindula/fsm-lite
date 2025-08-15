@@ -1,0 +1,40 @@
+# Name                     Version          Build            Channel
+_libgcc_mutex              0.1              main
+_openmp_mutex              5.1              1_gnu
+ca-certificates            2025.8.3         hbd8a1cb_0       conda-forge
+coreutils                  9.5              hd590300_0       conda-forge
+fsm-lite                   1.0              h9948957_6       bioconda
+gawk                       5.3.1            h5eee18b_0       anaconda
+gmp                        6.3.0            h6a678d5_0
+gnutls                     3.8.9            h86084c0_1       conda-forge
+krb5                       1.21.3           h723845a_3
+libasprintf                0.25.1           h3f43e3d_1       conda-forge
+libedit                    3.1.20230828     h5eee18b_0
+libffi                     3.4.4            h6a678d5_1
+libgcc                     15.1.0           h767d61c_4       conda-forge
+libgcc-ng                  15.1.0           h69a702a_4       conda-forge
+libgcrypt-lib              1.11.1           hb9d3cd8_0       conda-forge
+libgettextpo               0.25.1           h3f43e3d_1       conda-forge
+libgomp                    15.1.0           h767d61c_4       conda-forge
+libgpg-error               1.55             h3f2d84a_0       conda-forge
+libgsasl                   2.2.2            h1bdc22f_0       conda-forge
+libiconv                   1.18             h3b78370_2       conda-forge
+libidn2                    2.3.4            h5eee18b_0
+libkrb5                    1.21.3           h520c7b4_3
+libntlm                    1.8              hb9d3cd8_0       conda-forge
+libstdcxx                  15.1.0           h8f9b012_4       conda-forge
+libstdcxx-ng               15.1.0           h4852527_4       conda-forge
+libtasn1                   4.20.0           hb9d3cd8_0       conda-forge
+libunistring               0.9.10           h27cfd23_0
+lmdb                       0.9.29           h2531618_0
+mpfr                       4.2.1            h90cbb55_3       conda-forge
+msmtp                      1.8.30           hdce3e81_0       conda-forge
+msmtp-sendmail             1.8.30           hfc2019e_0       conda-forge
+ncurses                    6.5              h7934f7d_0
+nettle                     3.10.1           h4a9d5aa_0       conda-forge
+openssl                    3.5.2            h26f9b46_0       conda-forge
+p11-kit                    0.24.1           hc5aa10d_0       conda-forge
+procps-ng                  4.0.4            haa1a288_0       conda-forge
+readline                   8.2              h8c095d6_2       conda-forge
+sdsl-lite                  2.1.1            h00ab1b0_1002    conda-forge
+sysstat                    12.7.6           h4bc722e_0       conda-forge

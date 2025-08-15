@@ -4,7 +4,8 @@ INPUT_FILE="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-li
 LISTA="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_todos.txt"
 LOG_DIR="logs"
 INTERVAL_MONITOR=30
-GENOMAS=(25 100 250)
+## GENOMAS=(25 100 250)
+GENOMAS=5
 SMINUSCULO=6
 SMAIUSCULO=600
 MMINUSCULO=1
@@ -13,9 +14,12 @@ TMP_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-temp"
 RES_DIR="/home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/fsm-lite-results/${VERSION}"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 
-PROGRAMA="./fsm-lite"
-
 rm *.sdsl
+make clean
+make depend
+make
+
+PROGRAMA="./fsm-lite"
 
 # Criar pastas
 mkdir -p "$LOG_DIR/monitor"
@@ -33,10 +37,10 @@ for N in "${GENOMAS[@]}"; do
     echo "============================="
   
     TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
-    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
-    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}"
-    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}genomas_${J}_max_TXT--${TIMESTAMP}.txt"
+    MONITOR_LOG="${LOG_DIR}/monitor/fsm_monitor_log_v${VERSION}_${N}_genomas_${J}_max_TXT--${TIMESTAMP}.txt"
+    OUTPUT_LOG="${LOG_DIR}/output/fsm_output_log_v${VERSION}_${N}_genomas_${J}_max_TXT--${TIMESTAMP}.txt"
+    TMP_FILES="${TMP_DIR}/fsm_tmp_files_v${VERSION}_${N}_genomas_${J}_max_TXT--${TIMESTAMP}"
+    OUTPUT_RES="${RES_DIR}/fsm_results_v${VERSION}_${N}_genomas_${J}_max_TXT--${TIMESTAMP}.txt"
 
 
 
@@ -74,7 +78,6 @@ for N in "${GENOMAS[@]}"; do
     # echo "Rodando fsm-lite v${VERSION} saida GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$MONITOR_LOG"
     # echo "Rodando fsm-lite v${VERSION} saida GZ: para $N amostras com $J de maximo as ${TIMESTAMP}." > "$OUTPUT_LOG"
     # echo -e "timestamp\tcpu\tmem\tvsz\trss" >> "$MONITOR_LOG"
-    # 
     # 
     # echo "Rodando fsm-lite v${VERSION} saida GZ: para $N amostras com $J de maximo as ${TIMESTAMP}."
     # 

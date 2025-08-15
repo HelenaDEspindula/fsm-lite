@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cd v2_0
+cd v1_0
+./progressivo-v1_0.sh
+cd ../v2_0
 ./progressivo-v2_0.sh
 cd ../v2_1
 ./progressivo-v2_1.sh

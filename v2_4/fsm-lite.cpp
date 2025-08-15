@@ -1,4 +1,4 @@
-/* VERSION 2.0 */
+/* VERSION 2.4 */
 
 /* --- Includes and Namespace --- */
 
@@ -242,57 +242,57 @@ int main(int argc, char ** argv)
           continue;
       }
       /* --- */
-    
-    
-    if (depth < config.maxlength && cst.rb(wn)-cst.lb(wn) == ep-sp)
-      continue; // not left-branching
-    
-    sdsl::interval_symbols(label_wt, sp, ep+1, support, labels, rank_sp, rank_ep);
-    if (support < config.minsupport || support > config.maxsupport)
-      continue;
-    
-    size_type truesupp = 0;
-    for (size_type i = 0; i < support; ++i)
-      if (config.minfreq <= rank_ep[i]-rank_sp[i])
-        ++truesupp;
-      if (truesupp < config.minsupport)
+      
+      
+      if (depth < config.maxlength && cst.rb(wn)-cst.lb(wn) == ep-sp)
+        continue; // not left-branching
+      
+      sdsl::interval_symbols(label_wt, sp, ep+1, support, labels, rank_sp, rank_ep);
+      if (support < config.minsupport || support > config.maxsupport)
         continue;
       
-      if (depth > config.maxlength)
-        depth = config.maxlength;
-      
-      /* New in Version 2.3 */
-      if (sp >= cst.csa.size()) {
-        cerr << "[ERRO] Valor de sp fora do limite do vetor CSA: sp = "
-             << sp << ", limite = " << cst.csa.size() << endl;
-        exit(1);
-      }
-      /* --- */
-      
-      size_type pos = cst.csa[sp];
-      
-      if (sep_rank1(pos) != sep_rank1(pos + depth))
-        continue;
-      
-      /* New in Version 2.3 */
-      if (pos + depth - 1 >= cst.csa.size()) {
-        cerr << "[ERRO] Tentativa de extrair sequência além dos limites do CSA: "
-             << "pos = " << pos << ", depth = " << depth 
-             << ", limite = " << cst.csa.size() << endl;
-        continue;  // ou exit(1);
-      }
-      /* --- */
-      
-      auto s = extract(cst.csa, pos, pos + depth - 1);
-      if (input_reader::smaller_than_rev_cmpl(s))
-        continue;
-      cout << s + " |";
+      size_type truesupp = 0;
       for (size_type i = 0; i < support; ++i)
         if (config.minfreq <= rank_ep[i]-rank_sp[i])
-          cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
-        cout << '\n';
+          ++truesupp;
+        if (truesupp < config.minsupport)
+          continue;
         
-
+        if (depth > config.maxlength)
+          depth = config.maxlength;
+        
+        /* New in Version 2.3 */
+        if (sp >= cst.csa.size()) {
+          cerr << "[ERRO] Valor de sp fora do limite do vetor CSA: sp = "
+               << sp << ", limite = " << cst.csa.size() << endl;
+          exit(1);
+        }
+        /* --- */
+        
+        size_type pos = cst.csa[sp];
+        
+        if (sep_rank1(pos) != sep_rank1(pos + depth))
+          continue;
+        
+        /* New in Version 2.3 */
+        if (pos + depth - 1 >= cst.csa.size()) {
+          cerr << "[ERRO] Tentativa de extrair sequência além dos limites do CSA: "
+               << "pos = " << pos << ", depth = " << depth 
+               << ", limite = " << cst.csa.size() << endl;
+          continue;  // ou exit(1);
+        }
+        /* --- */
+        
+        auto s = extract(cst.csa, pos, pos + depth - 1);
+        if (input_reader::smaller_than_rev_cmpl(s))
+          continue;
+        cout << s + " |";
+        for (size_type i = 0; i < support; ++i)
+          if (config.minfreq <= rank_ep[i]-rank_sp[i])
+            cout << ' ' << ir->id(labels[i]) << ':' << rank_ep[i]-rank_sp[i];
+          cout << '\n';
+          
+          
   }
   
   /* New in Version 2.4 */
