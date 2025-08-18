@@ -49,7 +49,7 @@ for N in "${GENOMAS[@]}"; do
 
     echo "Linha de funciona"
     
-    /usr/bin/time ./fsm-lite -v --debug -m 1 -s 6 -S 600 -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff -t temp-test > $OUTPUT_RES
+    /usr/bin/time ./fsm-lite -v --debug -m 1 -s 6 -S 600 -l /home/helena.despindula/LACTAS-HELISSON-01/Helena-stuff/input_fsm-lite_OXA-23_OXA-24_005.txt -t temp-test/ > $OUTPUT_RES
   
     echo "============================="
     # 
