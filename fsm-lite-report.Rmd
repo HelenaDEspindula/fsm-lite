@@ -1743,6 +1743,7 @@ proj_data <- data.frame(
 
 # Value for 15,000 genomes
 valor_10k <- proj_data$pred_min[proj_data$genomas == 10000]
+valor_10k
 
 # Y axis limit: 1.5× the projected value for 15k (ensures visibility)
 limite_superior <- valor_10k * 1.5
