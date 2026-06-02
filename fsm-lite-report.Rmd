@@ -1132,16 +1132,21 @@ Tabela:
 
 ```{r, eval=TRUE}
 
+# Carregar pacotes necessários (se usar stringr, descomente)
+# library(stringr)
+# library(dplyr)
 
 # Caminho dos logs
 log_dir <- "original/logs/output/"
 log_files <- list.files(log_dir, pattern = "fsm_output_log_.*\\.txt$", full.names = TRUE)
 
-print("Foram encontrados os arquivos")
+print("Foram encontrados os arquivos:")
 print(log_files)
 
-
+# Função para converter "mm:ss" ou "h:mm:ss" em segundos
 tempo_para_segundos <- function(t) {
+  if (is.na(t)) return(NA)
+  t <- as.character(t)
   if (grepl(":", t)) {
     partes <- as.numeric(unlist(strsplit(t, ":")))
     if (length(partes) == 3) return(partes[1]*3600 + partes[2]*60 + partes[3])
@@ -1150,46 +1155,52 @@ tempo_para_segundos <- function(t) {
   return(as.numeric(t))
 }
 
+# Extrair dados de um arquivo de log (usando base R)
 extrair_dados_log <- function(arquivo) {
-  linhas <- readLines(arquivo)
+  linhas <- readLines(arquivo, warn = FALSE)
   nome <- basename(arquivo)
   
-  # Extrair metadados do nome do arquivo
-  versao <- str_match(nome, "fsm_output_log_(v[0-9_]+)")[,2]
-  genomas <- as.numeric(str_match(nome, "_([0-9]+)genomas")[,2])
-  max_param <- as.numeric(str_match(nome, "_([0-9]+)_max")[,2])
-  tipo_output <- str_match(nome, "_(TXT|GZ)--")[,2]
-  timestamp <- str_match(nome, "--([0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9-]{8})")[,2]
+  # ---- Metadados do nome do arquivo ----
+  # Padrão esperado: fsm_output_log_v1_0_10genomas_10_max_GZ--2025-08-04_01-37-52.txt
+  padrao <- "fsm_output_log_(v[0-9_]+)_([0-9]+)genomas_([0-9]+)_max_(TXT|GZ)--([0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9-]{8})"
+  matches <- regmatches(nome, regexec(padrao, nome))
+  if (length(matches[[1]]) < 6) {
+    warning(paste("Nome do arquivo não reconhecido:", nome))
+    return(NULL)
+  }
+  versao <- matches[[1]][2]
+  genomas <- as.numeric(matches[[1]][3])
+  max_param <- as.numeric(matches[[1]][4])
+  tipo_output <- matches[[1]][5]
+  timestamp <- matches[[1]][6]
   
-  get_valor <- function(chave) {
-    linha <- grep(chave, linhas, value = TRUE)
-    if (length(linha) > 0) {
-      return(str_trim(gsub(".*:\\s*", "", linha)))
-    } else {
-      return(NA)
-    }
+  # ---- Extração de valores do conteúdo ----
+  get_valor <- function(chave, linhas) {
+    linha <- grep(chave, linhas, value = TRUE, fixed = FALSE)
+    if (length(linha) == 0) return(NA)
+    # Remove tudo até o último ':' e espaços
+    valor <- sub(".*:\\s*", "", linha[1])
+    return(trimws(valor))
   }
   
-  # Extrai tempo decorrido como string tipo "4:31.51"
+  # Tempo decorrido (especial, pois tem formato "m:ss" ou "h:mm:ss")
   get_elapsed <- function(linhas) {
     linha <- grep("Elapsed \\(wall clock\\) time", linhas, value = TRUE)
-    if (length(linha) > 0) {
-      tempo <- str_match(linha, ":\\s*(\\d+:\\d+(\\.\\d+)?)")[,2]
-      return(tempo)
-    } else {
-      return(NA)
-    }
+    if (length(linha) == 0) return(NA)
+    # Extrai o padrão "número:numero" (podendo ter dois pontos)
+    tempo_str <- regmatches(linha[1], regexec(":\\s*(\\d+:?\\d+\\.?\\d*)", linha[1]))[[1]][2]
+    if (is.na(tempo_str)) return(NA)
+    return(tempo_str)
   }
   
-  # Extração dos dados do conteúdo
-  elapsed <- tempo_para_segundos(get_elapsed(linhas))
-  user <- as.numeric(get_valor("User time"))
-  system <- as.numeric(get_valor("System time"))
-  cpu_pct <- as.numeric(gsub("%", "", get_valor("Percent of CPU")))
-  max_mem_kb <- as.numeric(get_valor("Maximum resident set size"))
-  max_mem_mb <- round(max_mem_kb / 1024, 2)
+  elapsed_str <- get_elapsed(linhas)
+  elapsed_sec <- tempo_para_segundos(elapsed_str)
   
-  #print(elapsed)
+  user_time <- as.numeric(get_valor("User time", linhas))
+  system_time <- as.numeric(get_valor("System time", linhas))
+  cpu_percent <- as.numeric(gsub("%", "", get_valor("Percent of CPU", linhas)))
+  max_rss_kb <- as.numeric(get_valor("Maximum resident set size", linhas))
+  max_rss_mb <- round(max_rss_kb / 1024, 2)
   
   data.frame(
     arquivo = nome,
@@ -1198,31 +1209,161 @@ extrair_dados_log <- function(arquivo) {
     max_param = max_param,
     tipo_output = tipo_output,
     timestamp = timestamp,
-    elapsed_sec = elapsed,
-    user_time = user,
-    system_time = system,
-    cpu_percent = cpu_pct,
-    max_rss_mb = max_mem_mb
+    elapsed_sec = elapsed_sec,
+    user_time = user_time,
+    system_time = system_time,
+    cpu_percent = cpu_percent,
+    max_rss_mb = max_rss_mb,
+    stringsAsFactors = FALSE
   )
 }
 
-# Aplicar a função
-tabela_logs <- bind_rows(lapply(log_files, extrair_dados_log))
+# Aplicar a função e combinar os resultados
+lista_dfs <- lapply(log_files, extrair_dados_log)
+lista_dfs <- lista_dfs[!sapply(lista_dfs, is.null)]  # remove NULLs
+if (length(lista_dfs) == 0) stop("Nenhum dado foi extraído.")
+tabela_logs <- do.call(rbind, lista_dfs)
 
 # Visualizar
 print(tabela_logs)
-#View(tabela_logs)
-
-# Exportar se quiser
+# Exportar
 write.csv(tabela_logs, "original/resumo_execucoes_v1_0.csv", row.names = FALSE)
-
-
 ```
 
 Graficos:
 
-```{r, eval=FALSE}
 
+
+```{r}
+# ============================================================
+# 1. Load libraries
+# ============================================================
+library(ggplot2)
+library(dplyr)
+
+# ============================================================
+# 2. Read data
+# ============================================================
+tabela_logs <- read.csv("original/resumo_execucoes_v1_0.csv")
+
+# Ensure correct data types
+tabela_logs$tipo_output <- factor(tabela_logs$tipo_output, levels = c("TXT", "GZ"))
+tabela_logs$genomas <- as.numeric(tabela_logs$genomas)
+tabela_logs$max_param <- as.numeric(tabela_logs$max_param)
+
+# ============================================================
+# 3. Create output folder for high‑resolution plots
+# ============================================================
+dir.create("graficos_poster", showWarnings = FALSE)
+
+# Function to save plots in both PDF (vector) and PNG (600 dpi)
+salvar_plot_poster <- function(plot, nome, largura_cm = 30, altura_cm = 20, dpi = 600) {
+  # PDF (infinitely scalable, ideal for posters)
+  ggsave(filename = paste0("graficos_poster/", nome, ".pdf"),
+         plot = plot, width = largura_cm, height = altura_cm, units = "cm")
+  # High‑resolution PNG (fallback)
+  ggsave(filename = paste0("graficos_poster/", nome, ".png"),
+         plot = plot, width = largura_cm, height = altura_cm, units = "cm", dpi = dpi)
+  message(paste("Saved:", nome))
+}
+
+# ============================================================
+# 4. Theme for poster (large fonts, clean background)
+# ============================================================
+tema_poster <- theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 18),
+    legend.text = element_text(size = 16),
+    strip.background = element_rect(fill = "gray90", color = "black", linewidth = 0.8),
+    strip.text = element_text(face = "bold", size = 18),
+    panel.grid.major = element_line(linewidth = 0.5, color = "gray80"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+# ============================================================
+# 5. Generate plots (English text, default ggplot2 colors)
+# ============================================================
+
+## 5.1 Time vs max_param (facet by genomes)
+p1 <- ggplot(tabela_logs, aes(x = max_param, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1.5) +
+  geom_point(size = 3) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Execution time vs max_param (fixed number of genomes)",
+       x = "Maximum parameter", y = "Time (seconds)", color = "Output type") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.1))) +  # extra space for small differences
+  tema_poster
+salvar_plot_poster(p1, "tempo_vs_maxparam_por_genoma")
+
+## 5.2 Memory vs max_param (facet by genomes)
+p2 <- ggplot(tabela_logs, aes(x = max_param, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, genomas)), linewidth = 1.5) +
+  geom_point(size = 3) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(title = "Memory usage vs max_param (fixed number of genomes)",
+       x = "Maximum parameter", y = "Peak RAM (MB)", color = "Output type") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.1))) +
+  tema_poster
+salvar_plot_poster(p2, "memoria_vs_maxparam_por_genoma")
+
+## 5.3 Time vs genomes (facet by max_param)
+p3 <- ggplot(tabela_logs, aes(x = genomas, y = elapsed_sec, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1.5) +
+  geom_point(size = 3) +
+  facet_wrap(~max_param, scales = "free_y", labeller = label_both) +
+  labs(title = "Execution time vs number of genomes (fixed max_param)",
+       x = "Number of genomes", y = "Time (seconds)", color = "Output type") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.1))) +
+  tema_poster
+salvar_plot_poster(p3, "tempo_vs_genomas_por_maxparam")
+
+## 5.4 Memory vs genomes (facet by max_param)
+p4 <- ggplot(tabela_logs, aes(x = genomas, y = max_rss_mb, color = tipo_output)) +
+  geom_line(aes(group = interaction(tipo_output, max_param)), linewidth = 1.5) +
+  geom_point(size = 3) +
+  facet_wrap(~max_param, scales = "free_y", labeller = label_both) +
+  labs(title = "Memory usage vs number of genomes (fixed max_param)",
+       x = "Number of genomes", y = "Peak RAM (MB)", color = "Output type") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.1))) +
+  tema_poster
+salvar_plot_poster(p4, "memoria_vs_genomas_por_maxparam")
+
+## 5.5 Bar plot: Time by output type (grid facet)
+p5 <- ggplot(tabela_logs, aes(x = tipo_output, y = elapsed_sec, fill = tipo_output)) +
+  geom_col(width = 0.7) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Execution time by output type (TXT vs GZ)",
+       x = "Output type", y = "Time (seconds)") +
+  scale_fill_discrete(guide = "none") +   # default colors
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # start at 0 for bars
+  tema_poster +
+  theme(axis.text.x = element_text(angle = 0, size = 14))
+salvar_plot_poster(p5, "barras_tempo_tipo_saida")
+
+## 5.6 Bar plot: Memory by output type (grid facet)
+p6 <- ggplot(tabela_logs, aes(x = tipo_output, y = max_rss_mb, fill = tipo_output)) +
+  geom_col(width = 0.7) +
+  facet_grid(genomas ~ max_param, labeller = label_both) +
+  labs(title = "Memory usage by output type (TXT vs GZ)",
+       x = "Output type", y = "Peak RAM (MB)") +
+  scale_fill_discrete(guide = "none") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  tema_poster +
+  theme(axis.text.x = element_text(angle = 0, size = 14))
+salvar_plot_poster(p6, "barras_memoria_tipo_saida")
+
+message("\nAll plots have been saved in the 'graficos_poster' folder (PDF and 600 dpi PNG).")
+```
+
+
+
+
+```{r, eval=FALSE}
 #  1. Ler a tabela
 tabela_logs <- read.csv("original/resumo_execucoes_v1_0.csv")
 
@@ -1297,7 +1438,183 @@ p6 <- ggplot(tabela_logs, aes(x = tipo_output, y = max_rss_mb, fill = tipo_outpu
        x = "Tipo de saída", y = "Pico de RAM (MB)")
 p6
 salvar_plot(p6, "barras_memoria_tipo_saida")
+```
 
+
+```{r, eval=FALSE}
+
+# ======================================================================
+# merMade Poster – Supplementary Figures (fsm-lite original analysis)
+# ======================================================================
+
+library(ggplot2)
+library(dplyr)
+
+# ----------------------------------------------------------------------
+# 1. Load and prepare data (use only valid genomes: 10, 25, 50, 100)
+# ----------------------------------------------------------------------
+tabela_logs <- read.csv("original/resumo_execucoes_v1_0.csv") %>%
+  filter(genomas %in% c(10, 25, 50, 100)) %>%
+  mutate(
+    tipo_output = factor(tipo_output, levels = c("TXT", "GZ")),
+    genomas = as.numeric(genomas),
+    max_param = as.numeric(max_param),
+    elapsed_sec = as.numeric(elapsed_sec),
+    max_rss_mb = as.numeric(max_rss_mb)
+  )
+
+# ----------------------------------------------------------------------
+# 2. Settings for poster-quality output
+# ----------------------------------------------------------------------
+dir.create("graficos_poster", showWarnings = FALSE)
+
+salvar_plot_poster <- function(plot, nome, largura_cm = 30, altura_cm = 20, dpi = 600) {
+  ggsave(paste0("graficos_poster/", nome, ".pdf"),
+         plot, width = largura_cm, height = altura_cm, units = "cm")
+  ggsave(paste0("graficos_poster/", nome, ".png"),
+         plot, width = largura_cm, height = altura_cm, units = "cm", dpi = dpi)
+  message("Saved: ", nome)
+}
+
+tema_poster <- theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 18, face = "italic"),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 18),
+    legend.text = element_text(size = 16),
+    strip.background = element_rect(fill = "gray90", color = "black", linewidth = 0.8),
+    strip.text = element_text(face = "bold", size = 18),
+    panel.grid.major = element_line(linewidth = 0.5, colour = "gray80"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+# ----------------------------------------------------------------------
+# 3. Figure A: Quadratic fit (Time vs Genomes, max_param = 600, TXT)
+# ----------------------------------------------------------------------
+dados_quad <- tabela_logs %>%
+  filter(max_param == 600, tipo_output == "TXT")
+
+if (nrow(dados_quad) >= 4) {
+  modelo_linear <- lm(elapsed_sec ~ genomas, data = dados_quad)
+  modelo_quad   <- lm(elapsed_sec ~ poly(genomas, 2), data = dados_quad)
+  
+  p_quad <- ggplot(dados_quad, aes(x = genomas, y = elapsed_sec)) +
+    geom_point(size = 4, color = "black") +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE,
+                colour = "#E69F00", linewidth = 1.5, linetype = "dashed") +
+    geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE,
+                colour = "#56B4E9", linewidth = 1.5) +
+    labs(
+      title = "fsm-lite scales quadratically with the number of genomes",
+      subtitle = "Orange dashed: O(n) | Blue solid: O(n²)",
+      x = "Number of genomes", y = "Execution time (seconds)"
+    ) +
+    tema_poster
+  salvar_plot_poster(p_quad, "fig_quadratic_fit")
+  
+  # Optional: print model summaries to console
+  cat("\n--- Linear model (O(n)) ---\n")
+  print(summary(modelo_linear))
+  cat("\n--- Quadratic model (O(n²)) ---\n")
+  print(summary(modelo_quad))
+}
+
+# ----------------------------------------------------------------------
+# 4. Figure B: Log‑log plot (slope ≈ 2 confirms quadratic complexity)
+# ----------------------------------------------------------------------
+p_loglog <- ggplot(dados_quad, aes(x = genomas, y = elapsed_sec)) +
+  geom_point(size = 4, color = "black") +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
+              colour = "#0072B2", linewidth = 1.5, fill = "gray80") +
+  scale_x_log10() + scale_y_log10() +
+  labs(
+    title = "Log‑log plot: slope indicates algorithmic order",
+    subtitle = "Slope close to 2 confirms O(n²) behaviour",
+    x = "log(Number of genomes)", y = "log(Time in seconds)"
+  ) +
+  tema_poster
+salvar_plot_poster(p_loglog, "fig_loglog")
+
+# ----------------------------------------------------------------------
+# 5. Figure C: Effect of max_param (-S) on execution time
+#    (boxplot or line plot showing small variation)
+# ----------------------------------------------------------------------
+# Summarise mean time for each (genomas, max_param, tipo_output)
+resumo_maxparam <- tabela_logs %>%
+  group_by(genomas, max_param, tipo_output) %>%
+  summarise(mean_time = mean(elapsed_sec), .groups = "drop")
+
+p_maxparam <- ggplot(resumo_maxparam, aes(x = factor(max_param), y = mean_time,
+                                          colour = tipo_output, group = tipo_output)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(
+    title = "Effect of the -S parameter on execution time",
+    subtitle = "Varying max_param from 10 to 600 causes little change in runtime",
+    x = "Maximum parameter (max_param)", y = "Execution time (seconds)",
+    colour = "Output type"
+  ) +
+  tema_poster +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+salvar_plot_poster(p_maxparam, "fig_maxparam_effect")
+
+# ----------------------------------------------------------------------
+# 6. Figure D: TXT vs GZ – no significant difference
+# ----------------------------------------------------------------------
+p_comparacao <- ggplot(tabela_logs, aes(x = tipo_output, y = elapsed_sec, fill = tipo_output)) +
+  geom_boxplot(width = 0.6, alpha = 0.7, outlier.shape = 16, outlier.size = 2) +
+  facet_wrap(~genomas, scales = "free_y", labeller = label_both) +
+  labs(
+    title = "Output compression (GZ) does not degrade performance",
+    subtitle = "TXT and GZ show similar execution times",
+    x = "Output type", y = "Execution time (seconds)"
+  ) +
+  scale_fill_manual(values = c("TXT" = "#0072B2", "GZ" = "#D55E00"), guide = "none") +
+  tema_poster
+salvar_plot_poster(p_comparacao, "fig_txt_vs_gz")
+
+# ----------------------------------------------------------------------
+# 7. Optional: Projection for larger datasets (500 and 1000 genomes)
+#    based on quadratic model fitted to 10–100 genomes.
+# ----------------------------------------------------------------------
+if (exists("modelo_quad")) {
+  novos_genomas <- data.frame(genomas = c(200, 500, 1000))
+  pred <- predict(modelo_quad, newdata = novos_genomas, interval = "confidence")
+  projecao <- data.frame(
+    genomas = novos_genomas$genomas,
+    pred_time = pred[, "fit"],
+    lwr = pred[, "lwr"],
+    upr = pred[, "upr"]
+  )
+  cat("\n--- Projected execution times (quadratic model) ---\n")
+  print(round(projecao, 1))
+  
+  # Optionally create a projection plot
+  p_proj <- ggplot(dados_quad, aes(x = genomas, y = elapsed_sec)) +
+    geom_point(size = 4, color = "black") +
+    geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE,
+                colour = "#56B4E9", linewidth = 1.5, fill = "gray80") +
+    geom_point(data = projecao, aes(y = pred_time), colour = "red", size = 5, shape = 18) +
+    geom_errorbar(data = projecao,
+                  aes(y = pred_time, ymin = lwr, ymax = upr),
+                  width = 20, colour = "red", linewidth = 1) +
+    scale_x_continuous(breaks = c(10, 25, 50, 100, 200, 500, 1000), trans = "log10") +
+    scale_y_continuous(trans = "log10") +
+    labs(
+      title = "Projection for larger datasets (quadratic extrapolation)",
+      subtitle = "Red points: expected runtime for 200, 500 and 1000 genomes",
+      x = "Number of genomes (log scale)", y = "Execution time (seconds, log scale)"
+    ) +
+    tema_poster
+  salvar_plot_poster(p_proj, "fig_projection")
+}
+
+message("\nAll figures saved in 'graficos_poster/' (PDF + 600 dpi PNG).")
 
 ```
 
@@ -1318,39 +1635,374 @@ salvar_plot(p6, "barras_memoria_tipo_saida")
 
 
 ```{r, eval=FALSE}
+# =========================================================================
+# Complexity analysis: Quadratic vs. linear fit (O(n²) vs O(n))
+# =========================================================================
 
-# Vamos pegar os dados de uma condição específica de max_param (ex: 200)
-dados_modelo <- tabela_logs %>% filter(max_param == 200 & tipo_output == "TXT")
+# Select data for a fixed max_param (e.g., 200) and TXT output
+dados_modelo <- tabela_logs %>%
+  filter(max_param == 200, tipo_output == "TXT")
 
-# Ajustar modelos
+# Fit linear and quadratic models
 modelo_linear <- lm(elapsed_sec ~ genomas, data = dados_modelo)
-modelo_quad <- lm(elapsed_sec ~ poly(genomas, 2), data = dados_modelo)
+modelo_quad   <- lm(elapsed_sec ~ poly(genomas, 2), data = dados_modelo)
 
-# Comparar modelos
-summary(modelo_linear)
-summary(modelo_quad)
+# Print model summaries to console (for reference)
+cat("\n========== Linear model (O(n)) ==========\n")
+print(summary(modelo_linear))
+cat("\n========== Quadratic model (O(n²)) ==========\n")
+print(summary(modelo_quad))
 
-# Plotar com ajuste
-p7 <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "blue", linetype = "dashed") +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, color = "red") +
-  labs(title = "Ajuste de Tempo vs Genomas",
-       subtitle = "Azul = linear (O(n)), Vermelho = quadrático (O(n²))",
-       x = "Genomas", y = "Tempo (s)")
-p7
-salvar_plot(p7, "ajuste_de_tempo_vs_genomas_para_bigO")
+# -------------------------------------------------------------------------
+# Figure 1: Time vs Genomes with linear and quadratic fits
+# -------------------------------------------------------------------------
+p_complexity <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
+  geom_point(size = 4, color = "black", alpha = 0.8) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE,
+              colour = "#E69F00", linewidth = 1.5, linetype = "dashed") +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE,
+              colour = "#56B4E9", linewidth = 1.5) +
+  labs(
+    title = "fsm‑lite scales quadratically with the number of genomes",
+    subtitle = "Dashed orange: linear fit (O(n)) | Solid blue: quadratic fit (O(n²))",
+    x = "Number of genomes", y = "Execution time (seconds)"
+  ) +
+  theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 18, face = "italic"),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    panel.grid.major = element_line(linewidth = 0.5, colour = "gray80"),
+    panel.grid.minor = element_blank()
+  )
 
-p8 <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+# Save figure
+salvar_plot_poster(p_complexity, "complexity_quadratic_vs_linear")
+
+# -------------------------------------------------------------------------
+# Figure 2: Log‑log plot (slope = algorithmic order)
+# -------------------------------------------------------------------------
+# Extract slope from log‑log linear model for annotation
+loglog_model <- lm(log10(elapsed_sec) ~ log10(genomas), data = dados_modelo)
+slope <- round(coef(loglog_model)[2], 2)
+r2 <- round(summary(loglog_model)$r.squared, 3)
+
+p_loglog <- ggplot(dados_modelo, aes(x = genomas, y = elapsed_sec)) +
+  geom_point(size = 4, color = "black", alpha = 0.8) +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
+              colour = "#0072B2", linewidth = 1.5, fill = "gray80") +
   scale_x_log10() +
   scale_y_log10() +
-  labs(title = "Log-Log: Tempo vs Genomas", x = "log(Genomas)", y = "log(Tempo)")
-p8
-salvar_plot(p8, "ajuste_de_tempo_vs_genomas_para_bigO_log_log")
+  labs(
+    title = "Log‑log analysis confirms quadratic growth",
+    subtitle = paste0("Slope = ", slope, " (R² = ", r2, ") – consistent with O(n²) behaviour"),
+    x = expression(log[10]("Number of genomes")),
+    y = expression(log[10]("Execution time (seconds)"))
+  ) +
+  theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 18, face = "italic"),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    panel.grid.major = element_line(linewidth = 0.5, colour = "gray80"),
+    panel.grid.minor = element_blank()
+  )
+
+salvar_plot_poster(p_loglog, "complexity_loglog")
+```
 
 
+```{r, eval=FALSE}
+# =========================================================================
+# Projection plot up to 15,000 genomes – clean and professional
+# =========================================================================
+
+library(ggplot2)
+library(dplyr)
+
+# Data (valid genomes: 10, 25, 50, 100)
+dados_modelo <- tabela_logs %>%
+  filter(max_param == 200, tipo_output == "TXT") %>%
+  mutate(time_min = elapsed_sec / 60)
+
+# Quadratic model (minutes)
+modelo_quad_min <- lm(time_min ~ poly(genomas, 2), data = dados_modelo)
+
+# Projection up to 15,000 genomes
+new_genomes <- data.frame(genomas = c(200, 500, 1000, 5000, 10000, 15000))
+pred <- predict(modelo_quad_min, newdata = new_genomes, interval = "confidence")
+
+proj_data <- data.frame(
+  genomas = new_genomes$genomas,
+  pred_min = pred[, "fit"],
+  lwr = pred[, "lwr"],
+  upr = pred[, "upr"]
+)
+
+# Value for 15,000 genomes
+valor_10k <- proj_data$pred_min[proj_data$genomas == 10000]
+
+# Y axis limit: 1.5× the projected value for 15k (ensures visibility)
+limite_superior <- valor_10k * 1.5
+
+# Plot
+p_projection <- ggplot(dados_modelo, aes(x = genomas, y = time_min)) +
+  geom_point(size = 4, color = "black", alpha = 0.8) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE,
+              colour = "#56B4E9", linewidth = 1.5, fill = "gray80") +
+  geom_point(data = proj_data, aes(y = pred_min), colour = "#D55E00", size = 5, shape = 18) +
+  geom_errorbar(data = proj_data, aes(y = pred_min, ymin = lwr, ymax = upr),
+                width = 0.05, colour = "#D55E00", linewidth = 1) +
+  scale_x_log10(
+    breaks = c(10, 25, 50, 100, 200, 500, 1000, 5000, 10000),
+    minor_breaks = NULL
+  ) +
+  scale_y_log10(
+    breaks = c(0.1, 0.3, 1, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000, 100000, valor_10k),
+    labels = function(x) {
+      ifelse(x < 60, paste0(x, " min"),
+             ifelse(x < 1440, paste0(round(x/60, 1), " h"),
+                    paste0(round(x/1440, 1), " d")))
+    },
+    limits = c(NA, limite_superior)
+  ) +
+  labs(
+    title = "fsm-lite runtime projection for large-scale analyses",
+    subtitle = "Quadratic extrapolation (blue) with 95% CI. The program crashes with large datasets.",
+    x = expression(log[10]("Number of genomes")),
+    y = "Execution time (minutes, log scale)"
+  ) +
+  theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 16, face = "italic"),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    panel.grid.major = element_line(linewidth = 0.5, colour = "gray80"),
+    panel.grid.minor = element_blank()
+  )
+
+# Save with wide aspect ratio
+ggsave("graficos_poster/complexity_projection_10k.pdf", 
+       plot = p_projection, width = 50, height = 20, units = "cm")
+ggsave("graficos_poster/complexity_projection_10k.png", 
+       plot = p_projection, width = 50, height = 20, units = "cm", dpi = 600)
+
+message("Projection plot up to 15k genomes saved. Y axis extends to ", round(limite_superior, 0), 
+        " minutes (~", round(limite_superior/1440, 1), " days).")
+```
+
+
+```{r, eval=FALSE}
+# ======================================================================
+# Perfil de memória do fsm-lite (versão corrigida)
+# ======================================================================
+
+library(ggplot2)
+library(dplyr)
+library(stringr)
+
+# ----------------------------------------------------------------------
+# 1. Localizar arquivos de monitoramento
+# ----------------------------------------------------------------------
+monitor_dir <- "original/logs/monitor/"
+monitor_files <- list.files(monitor_dir, pattern = "fsm_monitor_log_.*\\.txt$", 
+                            full.names = TRUE)
+
+if (length(monitor_files) == 0) {
+  stop("Nenhum arquivo de monitoramento encontrado em ", monitor_dir)
+}
+
+# ----------------------------------------------------------------------
+# 2. Função melhorada para extrair dados (apenas linhas do ps)
+# ----------------------------------------------------------------------
+extrair_perfil <- function(arquivo) {
+  nome <- basename(arquivo)
+  
+  # Extrair metadados do nome
+  padrao <- "fsm_monitor_log_(v[0-9_]+)_([0-9]+)genomas_([0-9]+)_max_(TXT|GZ)--(.+)\\.txt"
+  matches <- str_match(nome, padrao)
+  if (is.na(matches[1])) {
+    warning(paste("Nome não reconhecido:", nome))
+    return(NULL)
+  }
+  
+  versao      <- matches[2]
+  genomas     <- as.numeric(matches[3])
+  max_param   <- as.numeric(matches[4])
+  tipo_output <- matches[5]
+  timestamp   <- matches[6]
+  
+  # Ler todas as linhas do arquivo
+  linhas <- readLines(arquivo, warn = FALSE)
+  
+  # Encontrar a linha que contém o cabeçalho "timestamp\tcpu\tmem\tvsz\trss"
+  cabecalho_idx <- grep("^timestamp\\t", linhas)
+  if (length(cabecalho_idx) == 0) {
+    warning(paste("Cabeçalho não encontrado em", nome))
+    return(NULL)
+  }
+  
+  # As linhas de dados começam após o cabeçalho
+  dados_brutos <- linhas[(cabecalho_idx[1] + 1):length(linhas)]
+  
+  # Remover linhas vazias
+  dados_brutos <- dados_brutos[dados_brutos != ""]
+  
+  # Processar cada linha: manter apenas aquelas que têm 5 campos separados por tab
+  # e que o quinto campo (rss) seja > 0 (assim descartamos as linhas do pidstat)
+  linhas_validas <- c()
+  for (l in dados_brutos) {
+    campos <- strsplit(l, "\t")[[1]]
+    if (length(campos) == 5) {
+      # Verificar se o quinto campo é numérico e > 0
+      rss_val <- as.numeric(gsub(",", ".", campos[5]))
+      if (!is.na(rss_val) && rss_val > 0) {
+        linhas_validas <- c(linhas_validas, l)
+      }
+    }
+  }
+  
+  if (length(linhas_validas) == 0) {
+    warning(paste("Nenhuma linha válida (ps) em", nome))
+    return(NULL)
+  }
+  
+  # Ler as linhas como tabela
+  con <- textConnection(linhas_validas)
+  dados <- read.table(con, sep = "\t", header = FALSE, 
+                      col.names = c("timestamp", "cpu", "mem", "vsz", "rss"),
+                      stringsAsFactors = FALSE)
+  close(con)
+  
+  # Converter vírgulas decimais para ponto em todas as colunas numéricas
+  for (col in c("cpu", "mem", "vsz", "rss")) {
+    dados[[col]] <- as.numeric(gsub(",", ".", dados[[col]]))
+  }
+  
+  # O timestamp está em segundos desde 1970 (Unix time)
+  # Calcular tempo relativo em segundos
+  dados <- dados %>%
+    arrange(timestamp) %>%
+    mutate(
+      tempo_rel = timestamp - min(timestamp),
+      rss_mb = rss / 1024,   # converter KB para MB
+      genomas = genomas,
+      max_param = max_param,
+      tipo_output = tipo_output
+    )
+  
+  return(dados)
+}
+
+# ----------------------------------------------------------------------
+# 3. Aplicar a todos os arquivos
+# ----------------------------------------------------------------------
+lista_perfis <- lapply(monitor_files, extrair_perfil)
+lista_perfis <- lista_perfis[!sapply(lista_perfis, is.null)]
+
+if (length(lista_perfis) == 0) {
+  stop("Nenhum dado válido extraído. Verifique o formato dos arquivos de monitoramento.")
+}
+
+dados_perfil <- bind_rows(lista_perfis)
+
+# ----------------------------------------------------------------------
+# 4. Selecionar a configuração mais pesada (ex: 100 genomas, max_param 600)
+# ----------------------------------------------------------------------
+max_genomas <- max(dados_perfil$genomas, na.rm = TRUE)
+max_maxparam <- max(dados_perfil$max_param, na.rm = TRUE)
+
+dados_interesse <- dados_perfil %>%
+  filter(genomas == max_genomas, max_param == max_maxparam)
+
+# Se não existir, pega a combinação mais pesada disponível
+if (nrow(dados_interesse) == 0) {
+  dados_interesse <- dados_perfil %>%
+    group_by(genomas, max_param) %>%
+    summarise(n = n(), .groups = "drop") %>%
+    arrange(desc(genomas), desc(max_param)) %>%
+    slice(1)
+  dados_interesse <- semi_join(dados_perfil, dados_interesse, by = c("genomas", "max_param"))
+}
+
+# ----------------------------------------------------------------------
+# 5. Configurações para salvar (alta resolução)
+# ----------------------------------------------------------------------
+dir.create("graficos_poster", showWarnings = FALSE)
+
+salvar_plot_poster <- function(plot, nome, largura_cm = 30, altura_cm = 20, dpi = 600) {
+  ggsave(paste0("graficos_poster/", nome, ".pdf"),
+         plot, width = largura_cm, height = altura_cm, units = "cm")
+  ggsave(paste0("graficos_poster/", nome, ".png"),
+         plot, width = largura_cm, height = altura_cm, units = "cm", dpi = dpi)
+  message("Saved: ", nome)
+}
+
+tema_poster <- theme_bw(base_size = 18) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 24),
+    plot.subtitle = element_text(hjust = 0.5, size = 18, face = "italic"),
+    axis.title = element_text(face = "bold", size = 20),
+    axis.text = element_text(size = 16),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 18),
+    legend.text = element_text(size = 16),
+    strip.background = element_rect(fill = "gray90", color = "black", linewidth = 0.8),
+    strip.text = element_text(face = "bold", size = 18),
+    panel.grid.major = element_line(linewidth = 0.5, colour = "gray80"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+cores_tipo <- c("TXT" = "#0072B2", "GZ" = "#D55E00")
+
+# ----------------------------------------------------------------------
+# 6. Gráfico de perfil de memória para a configuração mais pesada
+# ----------------------------------------------------------------------
+p_memoria <- ggplot(dados_interesse, aes(x = tempo_rel, y = rss_mb, colour = tipo_output)) +
+  geom_line(linewidth = 1.5) +
+  geom_point(size = 2, alpha = 0.6) +
+  labs(
+    title = "Memory footprint during fsm-lite execution",
+    subtitle = paste("Genomes:", max_genomas, " | max_param:", max_maxparam),
+    x = "Elapsed time (seconds)", y = "Resident memory (MB)",
+    colour = "Output type"
+  ) +
+  scale_colour_manual(values = cores_tipo) +
+  tema_poster
+
+salvar_plot_poster(p_memoria, "memory_profile_single")
+
+# ----------------------------------------------------------------------
+# 7. (Opcional) Gráfico facetado comparando diferentes tamanhos
+# ----------------------------------------------------------------------
+# Filtrar apenas combinações com pelo menos 10 pontos e genomas >= 50
+dados_facet <- dados_perfil %>%
+  filter(genomas >= 50) %>%
+  group_by(genomas, max_param, tipo_output) %>%
+  filter(n() >= 5) %>%
+  ungroup()
+
+if (nrow(dados_facet) > 0) {
+  p_facet <- ggplot(dados_facet, aes(x = tempo_rel, y = rss_mb, colour = tipo_output)) +
+    geom_line(linewidth = 1) +
+    facet_grid(genomas ~ max_param, labeller = label_both) +
+    labs(
+      title = "Memory usage over time for different input sizes",
+      x = "Elapsed time (seconds)", y = "Resident memory (MB)",
+      colour = "Output type"
+    ) +
+    scale_colour_manual(values = cores_tipo) +
+    tema_poster +
+    theme(legend.position = "bottom",
+          strip.text = element_text(size = 14))
+  salvar_plot_poster(p_facet, "memory_profile_faceted")
+}
+
+message("\nPerfis de memória salvos em 'graficos_poster/' (PDF e PNG 600 dpi).")
 ```
 ![](graficos/ajuste_de_tempo_vs_genomas_para_bigO.png)
 
